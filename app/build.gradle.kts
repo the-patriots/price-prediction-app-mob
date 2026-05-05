@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.price_predictions"
-        minSdk = 35
+        minSdk = 30
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -55,4 +55,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation(project(":app:presentations"))
+    implementation(project(":app:core"))
+    implementation(project(":app:data"))
+    implementation(project(":app:domain"))
 }

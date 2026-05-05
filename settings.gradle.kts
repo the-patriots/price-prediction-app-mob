@@ -24,4 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "price_predictions"
 include(":app")
- 
+include(":app:data")
+include(":app:domain")
+include(":app:presentations")
+include(":app:core")
