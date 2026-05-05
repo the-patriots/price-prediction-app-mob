@@ -8,6 +8,7 @@ lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.13.0"
 kotlin = "2.2.10"
 composeBom = "2024.09.00"
+serializer = "1.7.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,4 +30,4 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version = "8.5.0" }
-
+serializer = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializer"}
