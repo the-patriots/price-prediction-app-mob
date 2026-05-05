@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.presentations.TestOnlsy
-import com.example.price_predictions.ui.theme.Price_predictionsTheme
+import com.example.core.ui.theme.Price_predictionsTheme
+import com.example.presentations.auth.pages.LoginPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,24 +17,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Price_predictionsTheme {
-                TestOnlsy()
+                LoginPage()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Price_predictionsTheme {
-        Greeting("Android")
     }
 }
