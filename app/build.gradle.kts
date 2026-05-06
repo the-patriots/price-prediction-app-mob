@@ -59,4 +59,10 @@ dependencies {
     implementation(project(":app:core"))
     implementation(project(":app:data"))
     implementation(project(":app:domain"))
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation("androidx.navigation3:navigation3-runtime:1.2.0-alpha02")
+    implementation("androidx.navigation3:navigation3-ui:1.2.0-alpha02")
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
 }

@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 
 @Composable
-fun LoginPage(modifier: Modifier = Modifier,viewModel: LoginPageViewModel = viewModel()) {
+fun LoginPage(modifier: Modifier = Modifier) {
     Scaffold() {
         Column(
             modifier = Modifier.padding(it), verticalArrangement = Arrangement.spacedBy(

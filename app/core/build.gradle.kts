@@ -50,4 +50,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation("androidx.navigation3:navigation3-runtime:1.2.0-alpha02")
+    implementation("androidx.navigation3:navigation3-ui:1.2.0-alpha02")
 }
