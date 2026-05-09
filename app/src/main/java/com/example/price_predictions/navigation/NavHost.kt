@@ -7,7 +7,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.example.presentations.auth.pages.LoginPage
 import com.example.presentations.auth.state.Route
-import com.example.presentations.dashboard.pages.HomeScreen
+import com.example.presentations.home.pages.HomeScreen
 
 @Composable
 fun NavHost() {

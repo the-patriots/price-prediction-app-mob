@@ -1,6 +1,5 @@
-package com.example.presentations.dashboard.components
+package com.example.presentations.home.components
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

@@ -1,6 +1,5 @@
-package com.example.presentations.dashboard.components
+package com.example.presentations.home.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 
@@ -31,7 +30,9 @@ import com.example.core.styles.textShadow
 import com.example.core.ui.theme.PrimaryGradient
 
 @Composable
-fun DashboardAppBar() {
+fun DashboardAppBar(
+    onMonthSelect: (String) -> Unit
+) {
     var walletBalance by remember { mutableIntStateOf(0) }
 
     Surface {
@@ -65,7 +66,7 @@ fun DashboardAppBar() {
                         shadow = CommonTextStyle().textShadow()
                     )
                 )
-                MonthDropdown(onSelect = { Log.println(Log.INFO, "info", it)})
+                MonthDropdown(onSelect = { onMonthSelect(it) })
             }
             DashboardAppBarWallet(walletBalance)
         }

@@ -58,5 +58,7 @@ dependencies {
     implementation("androidx.navigation3:navigation3-ui:1.2.0-alpha02")
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
+    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 
 }
