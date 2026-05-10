@@ -60,4 +60,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("androidx.room:room-runtime:2.8.4")
     implementation("androidx.room:room-ktx:2.8.4}")
+
+    val supabaseVersion = "2.4.3"
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
+// Untuk Database
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:${supabaseVersion}")
+// Untuk Auth
 }

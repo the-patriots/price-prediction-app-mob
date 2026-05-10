@@ -30,14 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.core.components.CustomOutlineTextField
 import com.example.core.components.Validators
-import com.example.presentations.auth.viewmodel.LoginPageViewModel
+import com.example.presentations.auth.viewmodel.SignUpViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginPage(
+fun SignUpPage(
     modifier: Modifier = Modifier,
-    viewModel: LoginPageViewModel = koinViewModel(),
-    onSignUpClick: () -> Unit
+    viewModel: SignUpViewModel = koinViewModel(),
+    onLoginClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -95,24 +95,44 @@ fun LoginPage(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CustomOutlineTextField(
+                value = state.repassword,
+                onValueChange = { viewModel.onRepasswordChange(it) },
+                label = "Confirm Password",
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Confirm Password Icon") },
+                validators = listOf(
+                    { Validators.isNotEmpty(it) },
+                    {
+                        com.example.core.components.ValidationResult(
+                            isValid = it == state.password,
+                            errorMessage = if (it == state.password) null else "Passwords do not match"
+                        )
+                    }
+                ),
+                isPasswordField = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
-                    viewModel.login()
+                    viewModel.signUp()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading && state.isFormValid
             ) {
-                Text("Login")
+                Text("Sign Up")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Belum punya akun? Daftar",
+                text = "Sudah punya akun? Login",
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { onSignUpClick() }
+                modifier = Modifier.clickable { onLoginClick() }
             )
         }
     }

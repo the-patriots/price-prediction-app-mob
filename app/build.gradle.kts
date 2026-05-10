@@ -1,6 +1,13 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+}
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -10,15 +17,23 @@ android {
             minorApiLevel = 1
         }
     }
+    compileSdk = 36
+
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
 
     defaultConfig {
         applicationId = "com.example.price_predictions"
         minSdk = 30
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "SUPABASE_URL", localProperties.getProperty("SUPABASE_URL") ?: "\"\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", localProperties.getProperty("SUPABASE_ANON_KEY") ?: "\"\"")
     }
 
     buildTypes {
@@ -67,4 +82,16 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation("androidx.room:room-runtime:2.8.4")
     implementation("androidx.room:room-ktx:2.8.4}")
+    val supabaseVersion = "2.4.3"
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
+// Untuk Database
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:${supabaseVersion}")
+// Untuk Auth
+
+
+    implementation("io.ktor:ktor-client-android:2.3.11")
+
+    // (Opsional tapi disarankan) Tambahkan ini jika nanti kamu butuh membaca respons JSON dari Database
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.11")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.11")
 }
