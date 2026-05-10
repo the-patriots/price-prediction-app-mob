@@ -1,4 +1,10 @@
 package com.example.data.auth.models
 
-class UserModel {
-}
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserModel(
+    @SerialName("username")
+    val username: String
+)

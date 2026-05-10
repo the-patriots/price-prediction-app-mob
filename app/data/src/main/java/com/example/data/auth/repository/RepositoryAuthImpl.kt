@@ -1,10 +1,11 @@
 package com.example.data.auth.repository
 
+import com.example.data.auth.datasource.AuthNetworkDatasource
 import com.example.domain.auth.repository.AuthRepository
 
-class RepositoryAuthImpl : AuthRepository{
+class RepositoryAuthImpl(private val datasource: AuthNetworkDatasource) : AuthRepository{
     override suspend fun login(username: String, password: String): Result<String> {
-        // Simulate a successful login
+        // Simulate successful login
         return if (username == "user" && password == "password") {
             Result.success("Login successful")
         } else {

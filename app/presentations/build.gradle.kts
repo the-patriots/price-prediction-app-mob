@@ -54,4 +54,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
     implementation(project(":app:core"))
     implementation(project(":app:domain"))
+    implementation("androidx.navigation3:navigation3-runtime:1.2.0-alpha02")
+    implementation("androidx.navigation3:navigation3-ui:1.2.0-alpha02")
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+
 }

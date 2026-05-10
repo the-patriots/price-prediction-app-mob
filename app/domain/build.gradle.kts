@@ -53,5 +53,4 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(project(":app:core"))
-    implementation(project(":app:data"))
 }
