@@ -19,6 +19,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.price_predictions.BuildConfig
+import com.example.price_predictions.navigation.mainnav.MainNavViewModel
 
 import org.koin.dsl.module
 
@@ -44,9 +45,14 @@ fun appModule() = module {
     viewModel { HomeViewModel() }
 
 
-    //navigation auth
+    //navigation app
     single { AppNavigationState() }
+
+    //navigation auth
     viewModel { AuthNavViewModel() }
+
+    //navigation main
+    viewModel { MainNavViewModel() }
 
     //Auth
     single <AuthNetworkDatasource>{ AuthNetworkDatasourceImpl(get()) }
