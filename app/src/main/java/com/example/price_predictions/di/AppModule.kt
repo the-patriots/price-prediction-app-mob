@@ -11,6 +11,7 @@ import com.example.domain.auth.usecases.SignUpUseCase
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
+import com.example.presentations.inputtransaction.viewmodel.InputTransactionViewModel
 import com.example.price_predictions.navigation.AppNavigationState
 import com.example.price_predictions.navigation.authnav.AuthNavViewModel
 import io.github.jan.supabase.createSupabaseClient
@@ -61,4 +62,7 @@ fun appModule() = module {
     single { SignUpUseCase(get()) }
     viewModel { LoginPageViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
+
+    //inputtransaction
+    viewModel { InputTransactionViewModel() }
 }
