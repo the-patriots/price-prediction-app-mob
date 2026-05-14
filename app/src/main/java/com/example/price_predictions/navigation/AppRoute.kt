@@ -10,5 +10,5 @@ sealed class AppRoute {
 }
 
 class AppNavigationState{
-    var currentRoute: AppRoute by mutableStateOf<AppRoute>(AppRoute.Auth)
+    var currentRoute: AppRoute by mutableStateOf<AppRoute>(AppRoute.Main)
 }

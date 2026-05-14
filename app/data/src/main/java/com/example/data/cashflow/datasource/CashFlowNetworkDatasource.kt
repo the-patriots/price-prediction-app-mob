@@ -1,18 +1,13 @@
 package com.example.data.cashflow.datasource
 
-import android.net.Uri
-import com.example.core.shareddomain.entities.CashFlow
-import com.example.domain.cashflow.entities.CashFlowPayload
 import com.example.data.cashflow.model.CashFlowPayloadModel
+import com.example.data.cashflow.model.CashFlowResponse
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.functions.functions
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.setBody
-import io.ktor.client.call.body
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
-import androidx.core.net.toUri
-import com.example.data.cashflow.model.CashFlowResponse
-import io.ktor.client.request.forms.MultiPartFormDataContent
 
 interface CashFlowNetworkDatasource {
     suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse>

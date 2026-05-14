@@ -25,7 +25,7 @@ fun <T> CustomTextFieldDropDown(
     onItemSelected: (DropDownItem<T>) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf(defaultItemSelected) }
+    var selectedItem by remember(defaultItemSelected) { mutableStateOf(defaultItemSelected) }
     
     ExposedDropdownMenuBox(
         expanded = expanded,
