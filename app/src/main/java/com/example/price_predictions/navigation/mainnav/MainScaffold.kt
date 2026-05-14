@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.example.presentations.home.pages.HomeScreen
+import com.example.presentations.cashflow.pages.InputTransactionScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,7 +31,11 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
                     entry<MainRoute.HomePage> {
                         HomeScreen()
                     }
+                    entry<MainRoute.InputPage> {
+                        InputTransactionScreen()
+                    }
                 }
+
             )
         }
     }

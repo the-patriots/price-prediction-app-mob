@@ -66,4 +66,7 @@ dependencies {
 // Untuk Database
     implementation("io.github.jan-tennert.supabase:gotrue-kt:${supabaseVersion}")
 // Untuk Auth
+    implementation("io.github.jan-tennert.supabase:functions-kt:${supabaseVersion}")
+// Untuk Edge Functions
+
 }

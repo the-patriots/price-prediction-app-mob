@@ -19,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -26,10 +28,15 @@ fun CustomOutlineTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    maxLines: Int = 1,
+    readOnly: Boolean = false,
+    enabled: Boolean = true,
     label: String = "",
     leadingIcon: @Composable (() -> Unit)? = null,
     validators: List<(String) -> ValidationResult> = emptyList(),
-    isPasswordField: Boolean = false
+    isPasswordField: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -37,6 +44,9 @@ fun CustomOutlineTextField(
 
     Column(modifier = modifier) {
         OutlinedTextField(
+            readOnly = readOnly,
+            enabled = enabled,
+            maxLines = maxLines,
             value = value,
             onValueChange = { newValue ->
                 onValueChange(newValue)
@@ -57,6 +67,8 @@ fun CustomOutlineTextField(
                 }
             } else null,
             visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             isError = isError,
             modifier = Modifier.fillMaxWidth()
         )

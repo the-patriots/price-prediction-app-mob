@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 
 class MainNavViewModel: ViewModel(){
-    val mainBackStack = mutableStateListOf<MainRoute>(MainRoute.HomePage)
+    val mainBackStack = mutableStateListOf<MainRoute>(MainRoute.InputPage)
 
     fun pop(){
         if(mainBackStack.size > 1){

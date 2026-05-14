@@ -1,11 +1,13 @@
 package com.example.core.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,16 +30,19 @@ fun <T> CustomTextFieldDropDown(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier
+        modifier = Modifier.fillMaxWidth()
     ) {
         OutlinedTextField(
             value = selectedItem.label,
             onValueChange = {},
             readOnly = true,
+            leadingIcon = {
+                Icon(imageVector = selectedItem.icon, contentDescription = selectedItem.label)
+            },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
-            modifier = Modifier.menuAnchor(),
+            modifier = Modifier.menuAnchor().fillMaxWidth(),
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
         )
         ExposedDropdownMenu(
@@ -47,6 +52,9 @@ fun <T> CustomTextFieldDropDown(
             listItem.forEach { item ->
                 DropdownMenuItem(
                     text = { Text(item.label) },
+                    leadingIcon = {
+                        Icon(imageVector = item.icon, contentDescription = item.label)
+                    },
                     onClick = {
                         selectedItem = item
                         expanded = false

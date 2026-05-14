@@ -8,15 +8,21 @@ import com.example.data.auth.repository.AuthRepositoryImpl
 import com.example.domain.auth.repository.AuthRepository
 import com.example.domain.auth.usecases.LoginUseCase
 import com.example.domain.auth.usecases.SignUpUseCase
+import com.example.domain.cashflow.repository.CashFlowRepository
+import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
+import com.example.data.cashflow.datasource.CashFlowNetworkDatasource
+import com.example.data.cashflow.datasource.CashFLowNetworkDatasourceImpl
+import com.example.data.cashflow.repository.CashFlowRepositoryImpl
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
-import com.example.presentations.inputtransaction.viewmodel.InputTransactionViewModel
+import com.example.presentations.cashflow.viewmodel.CashFlowViewModel
 import com.example.price_predictions.navigation.AppNavigationState
 import com.example.price_predictions.navigation.authnav.AuthNavViewModel
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.functions.Functions
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.price_predictions.BuildConfig
@@ -40,6 +46,7 @@ fun appModule() = module {
         ) {
             install(Auth)
             install(Postgrest)
+            install(Functions)
         }
     }
 
@@ -63,6 +70,9 @@ fun appModule() = module {
     viewModel { LoginPageViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
 
-    //inputtransaction
-    viewModel { InputTransactionViewModel() }
+    //cashflow
+    single<CashFlowNetworkDatasource> { CashFLowNetworkDatasourceImpl(get()) }
+    single<CashFlowRepository> { CashFlowRepositoryImpl(get()) }
+    single { CreateCashFlowUseCase(get()) }
+    viewModel { CashFlowViewModel(get()) }
 }

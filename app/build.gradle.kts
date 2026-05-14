@@ -81,17 +81,22 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation("androidx.room:room-runtime:2.8.4")
-    implementation("androidx.room:room-ktx:2.8.4}")
+    implementation("androidx.room:room-ktx:2.8.4")
+
     val supabaseVersion = "2.4.3"
     implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
 // Untuk Database
     implementation("io.github.jan-tennert.supabase:gotrue-kt:${supabaseVersion}")
 // Untuk Auth
+    implementation("io.github.jan-tennert.supabase:functions-kt:${supabaseVersion}")
+// Untuk Edge Functions
 
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     implementation("io.ktor:ktor-client-android:2.3.11")
 
     // (Opsional tapi disarankan) Tambahkan ini jika nanti kamu butuh membaca respons JSON dari Database
     implementation("io.ktor:ktor-client-content-negotiation:2.3.11")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.11")
+    implementation("io.ktor:ktor-client-logging:2.3.8")
 }
