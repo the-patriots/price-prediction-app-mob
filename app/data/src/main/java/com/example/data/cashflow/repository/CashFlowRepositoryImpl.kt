@@ -1,10 +1,9 @@
 package com.example.data.cashflow.repository
 
-import com.example.core.shareddomain.entities.CashFlow
-import com.example.domain.cashflow.entities.CashFlowPayload
-import com.example.data.cashflow.model.CashFlowPayloadModel
-import com.example.domain.cashflow.repository.CashFlowRepository
 import com.example.data.cashflow.datasource.CashFlowNetworkDatasource
+import com.example.data.cashflow.model.CashFlowPayloadModel
+import com.example.domain.cashflow.entities.CashFlowPayload
+import com.example.domain.cashflow.repository.CashFlowRepository
 
 class CashFlowRepositoryImpl(
     private val cashFlowNetworkDatasource: CashFlowNetworkDatasource
@@ -19,8 +18,7 @@ class CashFlowRepositoryImpl(
         cashFlowNetworkDatasource.deleteCashFlow(id)
     }
 
-    override suspend fun updateCashFlow(payload: CashFlowPayload) {
-        val dataModel = CashFlowPayloadModel.fromDomain(payload)
-        cashFlowNetworkDatasource.updateCashFLow(dataModel)
+    override suspend fun checkAiPrice(description: String, amount: Double): Result<String> {
+        return cashFlowNetworkDatasource.checkAiPrice(description, amount)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.core.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -14,6 +15,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.material3.MaterialTheme
 import com.example.core.constans.enums.DropDownItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,28 +35,42 @@ fun <T> CustomTextFieldDropDown(
         onExpandedChange = { expanded = !expanded },
         modifier = Modifier.fillMaxWidth()
     ) {
+        val activeColor = if (selectedItem.color != androidx.compose.ui.graphics.Color.Unspecified) selectedItem.color else MaterialTheme.colorScheme.primary
+
         OutlinedTextField(
             value = selectedItem.label,
             onValueChange = {},
             readOnly = true,
             leadingIcon = {
-                Icon(imageVector = selectedItem.icon, contentDescription = selectedItem.label)
+                Icon(imageVector = selectedItem.icon, contentDescription = selectedItem.label, tint = activeColor)
             },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
             modifier = Modifier.menuAnchor().fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
         )
         ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
         ) {
             listItem.forEach { item ->
+                val itemColor = if (item.color != androidx.compose.ui.graphics.Color.Unspecified) item.color else MaterialTheme.colorScheme.primary
                 DropdownMenuItem(
-                    text = { Text(item.label) },
+                    text = { 
+                        Text(
+                            text = item.label,
+                            color = itemColor
+                        ) 
+                    },
                     leadingIcon = {
-                        Icon(imageVector = item.icon, contentDescription = item.label)
+                        Icon(
+                            imageVector = item.icon, 
+                            contentDescription = item.label,
+                            tint = itemColor
+                        )
                     },
                     onClick = {
                         selectedItem = item

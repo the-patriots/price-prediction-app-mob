@@ -62,10 +62,22 @@ fun InputTransactionScreen(
         }
     }
 
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        viewModel.updateImageUri(uri)
+    if (state.showAiDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.cancelSave() },
+            title = { Text(text = "AI Price Check Result") },
+            text = { Text(text = state.aiResultText) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.confirmSave() }) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.cancelSave() }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 
     Column(modifier = Modifier
@@ -101,7 +113,7 @@ fun InputTransactionScreen(
 
                     SlideAnimationTransition(visible = true, delayMillis = 100) {
                         CustomOutlineTextField(
-                            value = state.amount,
+                            value = state.amountString,
                             onValueChange = { viewModel.updateAmount(it) },
                             label = "Amount",
                             leadingIcon = {
@@ -119,7 +131,7 @@ fun InputTransactionScreen(
 
                     SlideAnimationTransition(visible = true, delayMillis = 200) {
                         TextFieldDate(
-                            value = state.date,
+                            value = state.dateString,
                             onValueChange = { viewModel.updateDate(it) },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -130,7 +142,7 @@ fun InputTransactionScreen(
                     SlideAnimationTransition(visible = true, delayMillis = 300) {
                         CustomOutlineTextField(
                             maxLines = 4,
-                            value = state.description,
+                            value = state.payload.cashFlow.description ?: "",
                             onValueChange = { viewModel.updateDescription(it) },
                             label = "Description",
                             leadingIcon = {
@@ -143,72 +155,17 @@ fun InputTransactionScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    SlideAnimationTransition(visible = true, delayMillis = 400) {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) {
-                                    Text(if (state.imageUri != null) "Ganti Gambar" else "Pilih Gambar")
-                                }
-                                if (state.imageUri != null) {
-                                    Text(
-                                        text = "Gambar Terpilih",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        modifier = Modifier.padding(start = 8.dp)
-                                    )
-                                } else {
-                                    Text(
-                                        "Belum ada gambar",
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                            }
-
-                            if (state.imageUri != null) {
-                                Spacer(modifier = Modifier.height(16.dp))
-                                AsyncImage(
-                                    model = state.imageUri,
-                                    contentDescription = "Selected Image",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(150.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                        }
-                    }
-
                     Spacer(modifier = Modifier.height(24.dp))
 
                     SlideAnimationTransition(visible = true, delayMillis = 500) {
                         Button(
                             onClick = {
-                                viewModel.submit { uri ->
-                                    val inputStream = context.contentResolver.openInputStream(uri)
-                                    val file = File(
-                                        context.cacheDir,
-                                        "temp_image_${System.currentTimeMillis()}.jpg"
-                                    )
-                                    inputStream?.use { input ->
-                                        file.outputStream().use { output ->
-                                            input.copyTo(output)
-                                        }
-                                    }
-                                    file.takeIf { it.exists() }
-                                }
+                                viewModel.submit()
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            enabled = !state.isLoading
+                            enabled = !state.isLoading && !state.isCheckingAi
                         ) {
-                            if (state.isLoading) {
+                            if (state.isLoading || state.isCheckingAi) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(24.dp),
                                     color = MaterialTheme.colorScheme.onPrimary

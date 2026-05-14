@@ -25,7 +25,7 @@ fun HomeScreen(
 
 //    val uiState = viewModel.uiState.collectAsState()
 
-    Scaffold(topBar = { DashboardAppBar(onMonthSelect = {viewModel.setMonth(it)}) }) {
+    Scaffold() {
 
 
             Column(

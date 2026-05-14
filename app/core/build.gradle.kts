@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.serializer)
 }
 
 android {
@@ -53,5 +54,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation("androidx.navigation3:navigation3-runtime:1.2.0-alpha02")
     implementation("androidx.navigation3:navigation3-ui:1.2.0-alpha02")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
 }

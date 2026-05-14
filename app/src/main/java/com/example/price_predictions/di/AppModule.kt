@@ -9,14 +9,21 @@ import com.example.domain.auth.repository.AuthRepository
 import com.example.domain.auth.usecases.LoginUseCase
 import com.example.domain.auth.usecases.SignUpUseCase
 import com.example.domain.cashflow.repository.CashFlowRepository
+import com.example.domain.cashflow.usecases.CheckAiPriceUseCase
 import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
 import com.example.data.cashflow.datasource.CashFlowNetworkDatasource
 import com.example.data.cashflow.datasource.CashFLowNetworkDatasourceImpl
 import com.example.data.cashflow.repository.CashFlowRepositoryImpl
+import com.example.data.analytic.datasource.AnalyticNetworkDatasource
+import com.example.data.analytic.datasource.AnalyticNetworkDatasourceImpl
+import com.example.data.analytic.repository.AnalyticRepositoryImpl
+import com.example.domain.analytic.repository.AnalyticRepository
+import com.example.domain.analytic.usecases.GetAnalyticDataUseCase
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
 import com.example.presentations.cashflow.viewmodel.CashFlowViewModel
+import com.example.presentations.analytic.viewmodel.AnalyticViewModel
 import com.example.price_predictions.navigation.AppNavigationState
 import com.example.price_predictions.navigation.authnav.AuthNavViewModel
 import io.github.jan.supabase.createSupabaseClient
@@ -74,5 +81,12 @@ fun appModule() = module {
     single<CashFlowNetworkDatasource> { CashFLowNetworkDatasourceImpl(get()) }
     single<CashFlowRepository> { CashFlowRepositoryImpl(get()) }
     single { CreateCashFlowUseCase(get()) }
-    viewModel { CashFlowViewModel(get()) }
+    single { CheckAiPriceUseCase(get()) }
+    viewModel { CashFlowViewModel(get(),get()) }
+
+    //analytic
+    single<AnalyticNetworkDatasource> { AnalyticNetworkDatasourceImpl(get()) }
+    single<AnalyticRepository> { AnalyticRepositoryImpl(get()) }
+    single { GetAnalyticDataUseCase(get()) }
+    viewModel { AnalyticViewModel(get()) }
 }

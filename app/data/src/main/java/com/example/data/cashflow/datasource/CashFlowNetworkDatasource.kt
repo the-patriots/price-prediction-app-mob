@@ -3,16 +3,20 @@ package com.example.data.cashflow.datasource
 import com.example.data.cashflow.model.CashFlowPayloadModel
 import com.example.data.cashflow.model.CashFlowResponse
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.functions.functions
-import io.ktor.client.request.forms.MultiPartFormDataContent
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
-import kotlinx.serialization.json.Json
+import com.example.data.cashflow.model.AiCheckPayload
+import com.example.data.cashflow.model.AiCheckResponse
+import kotlinx.coroutines.delay
 
 interface CashFlowNetworkDatasource {
     suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse>
-    suspend fun updateCashFLow(payload: CashFlowPayloadModel)
     suspend fun deleteCashFlow(id: String)
+    suspend fun checkAiPrice(description: String, amount: Double): Result<String>
 }
 
 class CashFLowNetworkDatasourceImpl(
@@ -20,28 +24,28 @@ class CashFLowNetworkDatasourceImpl(
 ): CashFlowNetworkDatasource {
     override suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse> {
         return try {
-            val response = _supabaseClient.functions.invoke("upload_cash_flow") {
-                setBody(MultiPartFormDataContent(payload.toMultipartBody()))
-            }
-            
-            val jsonString = response.bodyAsText()
-            val result = Json { ignoreUnknownKeys = true }.decodeFromString<CashFlowResponse>(jsonString)
-            
-            if (result.error != null) {
-                Result.failure(Exception(result.error))
-            } else {
-                Result.success(result)
-            }
+            _supabaseClient.postgrest["cash_flows"].insert(payload)
+            Result.success(CashFlowResponse(message = "Success", error = null))
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun updateCashFLow(payload: CashFlowPayloadModel) {
+    override suspend fun deleteCashFlow(id: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteCashFlow(id: String) {
-        TODO("Not yet implemented")
+    override suspend fun checkAiPrice(description: String, amount: Double): Result<String> {
+        return try {
+            delay(2000)
+//            val response = _supabaseClient.functions.invoke("check_ai_price") {
+//                setBody(AiCheckPayload(description, amount))
+//            }
+//            val jsonString = response.bodyAsText()
+//            val result = Json { ignoreUnknownKeys = true }.decodeFromString<AiCheckResponse>(jsonString)
+            Result.success("sukses")
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
