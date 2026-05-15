@@ -8,5 +8,6 @@ data class HomeScreenState(
     val income: Int = 0,
     val outcome: Int = 0,
     val budgets: List<Budget> = emptyList(),
-    var month: String = "Januari"
+    val month: String = "Januari",
+    val isError: Boolean = false,
 )

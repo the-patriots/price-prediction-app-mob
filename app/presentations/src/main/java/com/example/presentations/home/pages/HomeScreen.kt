@@ -6,6 +6,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +24,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
 
-//    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.collectAsState()
 
     Scaffold(topBar = { DashboardAppBar(onMonthSelect = {viewModel.setMonth(it)}) }) {
 
@@ -32,6 +33,7 @@ fun HomeScreen(
                 modifier = Modifier.padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text("${uiState.value.isError}")
                 IncomeExpensesBar()
                 Text(text = "Budgets", fontSize = 20.sp, fontWeight = FontWeight.Medium)
                 HorizontalDivider(
@@ -39,7 +41,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(10.dp),
                     thickness = 1.5f.dp
                 )
-                BudgetsContainer()
+                BudgetsContainer(uiState.value.budgets)
             }
         }
 
