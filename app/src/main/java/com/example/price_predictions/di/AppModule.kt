@@ -19,6 +19,7 @@ import com.example.data.analytic.datasource.AnalyticNetworkDatasourceImpl
 import com.example.data.analytic.repository.AnalyticRepositoryImpl
 import com.example.domain.analytic.repository.AnalyticRepository
 import com.example.domain.analytic.usecases.GetAnalyticDataUseCase
+import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
@@ -34,6 +35,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.price_predictions.BuildConfig
 import com.example.price_predictions.navigation.mainnav.MainNavViewModel
+import org.koin.core.module.dsl.singleOf
 
 import org.koin.dsl.module
 
@@ -80,9 +82,10 @@ fun appModule() = module {
     //cashflow
     single<CashFlowNetworkDatasource> { CashFLowNetworkDatasourceImpl(get()) }
     single<CashFlowRepository> { CashFlowRepositoryImpl(get()) }
-    single { CreateCashFlowUseCase(get()) }
-    single { CheckAiPriceUseCase(get()) }
-    viewModel { CashFlowViewModel(get(),get()) }
+    factory { CreateCashFlowUseCase(get()) }
+    factory { CheckAiPriceUseCase(get()) }
+    factory { GetCashFlowsUseCase(get()) }
+    viewModel { CashFlowViewModel(get(),get(), get()) }
 
     //analytic
     single<AnalyticNetworkDatasource> { AnalyticNetworkDatasourceImpl(get()) }

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,26 +21,33 @@ import com.example.core.ui.theme.Success
 
 @Composable
 fun IncomeExpensesBar() {
-    Column(modifier= Modifier.padding(start = 10.dp, top = 10.dp)) {
-        Text(text = "Today's Report", fontWeight = FontWeight.Medium, color = Black)
+    Column(modifier = Modifier.padding(start = 10.dp, top = 10.dp)) {
+        Text(text = "Tranksasi bulan ini", fontWeight = FontWeight.Medium, color = Black)
         Row(
-            modifier= Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+
                 Icon(
                     imageVector = Icons.Rounded.KeyboardArrowDown,
-                    contentDescription =  "Income",
+                    contentDescription = "Income",
                     tint = Success
                 )
+
                 Text("Rp. 20.0000")
             }
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+
                 Icon(
                     imageVector = Icons.Rounded.KeyboardArrowUp,
-                    contentDescription =  "Expense",
+                    contentDescription = "Expense",
                     tint = Danger
                 )
+
+
                 Text("Rp. 20.0000")
             }
         }

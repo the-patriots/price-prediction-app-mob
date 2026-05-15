@@ -58,7 +58,7 @@ fun DashboardAppBar(
                 verticalAlignment = Alignment.Top
             ) {
                 Text(
-                    text = "Mom's Wallet",
+                    text = "Dompet Ibu",
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
