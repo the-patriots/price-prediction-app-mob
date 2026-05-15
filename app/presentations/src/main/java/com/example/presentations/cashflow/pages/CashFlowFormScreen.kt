@@ -1,40 +1,26 @@
 package com.example.presentations.cashflow.pages
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.ui.Alignment
-import coil.compose.AsyncImage
-import java.io.File
+import androidx.compose.ui.graphics.Color
 import com.example.core.components.CustomOutlineTextField
 import com.example.core.components.CustomTextFieldDropDown
 import com.example.core.components.TextFieldDate
 import com.example.core.components.animations.SlideAnimationTransition
 import com.example.core.constans.enums.InputTransactionEnum
 import com.example.core.components.LocalSnackbarHostState
+import com.example.core.ui.theme.PrimaryBlue
 import com.example.presentations.cashflow.viewmodel.CashFlowViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -162,6 +148,12 @@ fun InputTransactionScreen(
                             onClick = {
                                 viewModel.submit()
                             },
+                            colors = ButtonColors(
+                                containerColor = PrimaryBlue,
+                                contentColor = Color.White,
+                                disabledContainerColor = Color.Gray,
+                                disabledContentColor = Color.DarkGray
+                            ),
                             modifier = Modifier.fillMaxWidth(),
                             enabled = !state.isLoading && !state.isCheckingAi
                         ) {

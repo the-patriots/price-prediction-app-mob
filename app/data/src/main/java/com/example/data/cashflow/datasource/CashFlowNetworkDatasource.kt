@@ -1,29 +1,38 @@
 package com.example.data.cashflow.datasource
 
+import com.example.core.constans.enums.InputTransactionEnum
+import com.example.core.shareddata.models.CashFlowModel
 import com.example.data.cashflow.model.CashFlowPayloadModel
 import com.example.data.cashflow.model.CashFlowResponse
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.functions.functions
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import com.example.data.cashflow.model.AiCheckPayload
-import com.example.data.cashflow.model.AiCheckResponse
 import kotlinx.coroutines.delay
 
 interface CashFlowNetworkDatasource {
     suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse>
     suspend fun deleteCashFlow(id: String)
     suspend fun checkAiPrice(description: String, amount: Double): Result<String>
+
+    suspend fun getCashflows(
+        type: InputTransactionEnum.TypeCashFlow,
+        month: String,
+        year: Int,
+        search: String = ""
+    ): Result<List<CashFlowModel>>
 }
 
 class CashFLowNetworkDatasourceImpl(
     private val _supabaseClient: SupabaseClient,
-): CashFlowNetworkDatasource {
+) : CashFlowNetworkDatasource {
     override suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse> {
         return try {
+            val userID =  _supabaseClient.auth.sessionManager.loadSession()?.let {
+                it.user?.id
+            }
+            if (userID.isNullOrBlank()) throw (Exception("no session found"))
+            payload.userId = userID
             _supabaseClient.postgrest["cash_flows"].insert(payload)
             Result.success(CashFlowResponse(message = "Success", error = null))
         } catch (e: Exception) {
@@ -48,4 +57,40 @@ class CashFLowNetworkDatasourceImpl(
             Result.failure(e)
         }
     }
+
+    override suspend fun getCashflows(
+        type: InputTransactionEnum.TypeCashFlow,
+        month: String,
+        year: Int,
+        search: String
+    ): Result<List<CashFlowModel>> {
+        try {
+           val userID =  _supabaseClient.auth.sessionManager.loadSession()?.let {
+                it.user?.id
+            }
+
+            if (userID.isNullOrBlank()) throw (Exception("no session found"))
+
+            val result = _supabaseClient.from("cash_flows").select {
+                filter {
+                    eq("user_id", userID)
+                    eq("month", month)
+                    eq("year", year)
+                    eq("type", type.value)
+                    if (search.isNotBlank()) {
+                        or {
+                            ilike("category", "%$search%")
+                            ilike("description", "%$search%")
+                        }
+                    }
+                }
+            }.decodeList<CashFlowModel>()
+
+            return Result.success(result)
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
+    }
+
+
 }

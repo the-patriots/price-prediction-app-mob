@@ -5,6 +5,7 @@ import com.example.core.constans.enums.DropDownItem
 import com.example.core.constans.enums.InputTransactionEnum
 import com.example.domain.cashflow.entities.CashFlowPayload
 import com.example.core.shareddomain.entities.CashFlow
+import com.example.domain.cashflow.entities.CashFlowEntity
 
 data class CashFlowState(
     val payload: CashFlowPayload = CashFlowPayload(
@@ -19,6 +20,7 @@ data class CashFlowState(
             description = ""
         )
     ),
+    val cashFlows: List<CashFlowEntity> = emptyList(),
     val amountString: String = "",
     val dateString: String = "",
     val selectedCategory: DropDownItem<String> = InputTransactionEnum.KategoriPengeluaran.entries.first().item,

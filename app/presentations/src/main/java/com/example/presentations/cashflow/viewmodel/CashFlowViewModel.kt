@@ -1,15 +1,14 @@
 package com.example.presentations.cashflow.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.constans.enums.DropDownItem
 import com.example.core.constans.enums.InputTransactionEnum
-import com.example.core.shareddomain.entities.CashFlow
-import com.example.domain.cashflow.entities.CashFlowPayload
-import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
 import com.example.domain.cashflow.usecases.CheckAiPriceUseCase
+import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
+import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
 import com.example.presentations.cashflow.state.CashFlowState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,10 +16,32 @@ import kotlinx.coroutines.launch
 
 class CashFlowViewModel(
     private val createCashFlowUseCase: CreateCashFlowUseCase,
-    private val checkAiPriceUseCase: CheckAiPriceUseCase
+    private val checkAiPriceUseCase: CheckAiPriceUseCase,
+    private val getCashFlowsUseCase: GetCashFlowsUseCase,
 ): ViewModel() {
     private val _state = MutableStateFlow(CashFlowState())
     val state = _state.asStateFlow()
+
+    init {
+        loadCashFlows()
+    }
+
+
+    fun loadCashFlows() {
+        _state.update { it.copy(isLoading = true) }
+        val type = if (state.value.currentTab == 0 ) InputTransactionEnum.TypeCashFlow.PENGELUARAN else InputTransactionEnum.TypeCashFlow.PEMASUKKAN
+        viewModelScope.launch {
+            getCashFlowsUseCase(
+                type = type,
+                month = "Mei",
+                year = 2026,
+            ).fold(
+                onSuccess = { data -> _state.update { it.copy(cashFlows = data) }},
+                onFailure = {err -> _state.update { it.copy(error = err.message) }}
+            )
+        }
+        _state.update { it.copy(isLoading = false) }
+    }
 
     fun updateTabType(index: Int) {
         val defaultCategory = if (index == 0) {

@@ -3,15 +3,21 @@ package com.example.price_predictions.navigation.mainnav
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -22,11 +28,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.example.core.components.LocalSnackbarHostState
+import com.example.core.ui.theme.PrimaryBlue
 import com.example.presentations.analytic.pages.AnalyticScreen
+import com.example.presentations.cashflow.pages.CashFlowScreen
 import com.example.presentations.cashflow.pages.InputTransactionScreen
 import com.example.presentations.home.components.DashboardAppBar
 import com.example.presentations.home.pages.HomeScreen
@@ -47,19 +56,25 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
         BottomNavItem(
             label = "Home",
             route = MainRoute.HomePage,
-            selectedIcon = Icons.Filled.Home,
+            selectedIcon = Icons.Rounded.Home,
             unselectedIcon = Icons.Outlined.Home
+        ),
+        BottomNavItem(
+            label = "Transaksi",
+            route = MainRoute.Transactions,
+            selectedIcon = Icons.Rounded.Menu,
+            unselectedIcon = Icons.Outlined.Menu
         ),
         BottomNavItem(
             label = "Input",
             route = MainRoute.InputPage,
-            selectedIcon = Icons.Filled.Add,
+            selectedIcon = Icons.Rounded.Add,
             unselectedIcon = Icons.Outlined.Add
         ),
         BottomNavItem(
             label = "Analytic",
             route = MainRoute.AnalyticPage,
-            selectedIcon = Icons.Filled.DateRange,
+            selectedIcon = Icons.Rounded.DateRange,
             unselectedIcon = Icons.Outlined.DateRange
         )
     )
@@ -73,12 +88,21 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             topBar = { DashboardAppBar(onMonthSelect = { viewModel.updateSelectedMonth(it) }) },
             bottomBar = {
-                NavigationBar {
+                NavigationBar(containerColor = PrimaryBlue) {
                     navItems.forEach { item ->
                         val isSelected = currentRoute == item.route ||
                                 (currentRoute != null && currentRoute!!::class == item.route::class)
 
                         NavigationBarItem(
+                            colors = NavigationBarItemColors(
+                                selectedIconColor = PrimaryBlue,
+                                selectedTextColor = Color.White,
+                                selectedIndicatorColor = Color.White,
+                                unselectedIconColor = Color.White,
+                                unselectedTextColor = Color.White,
+                                disabledIconColor = Color.Gray,
+                                disabledTextColor = Color.Gray
+                            ),
                             selected = isSelected,
                             onClick = { viewModel.navigateTo(item.route) },
                             icon = {
@@ -99,6 +123,9 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
                     entryProvider = entryProvider {
                         entry<MainRoute.HomePage> {
                             HomeScreen()
+                        }
+                        entry<MainRoute.Transactions> {
+                            CashFlowScreen()
                         }
                         entry<MainRoute.InputPage> {
                             InputTransactionScreen()
