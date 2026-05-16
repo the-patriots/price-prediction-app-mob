@@ -74,7 +74,9 @@ class CashFLowNetworkDatasourceImpl(
             val result = _supabaseClient.from("cash_flows").select {
                 filter {
                     eq("user_id", userID)
-                    eq("month", month)
+                    if (month.isNotBlank()) {
+                        eq("month", month)
+                    }
                     eq("year", year)
                     eq("type", type.value)
                     if (search.isNotBlank()) {

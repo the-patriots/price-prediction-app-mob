@@ -24,6 +24,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import com.example.presentations.cashflow.pages.CashFlowScreen
 import com.example.presentations.cashflow.pages.InputTransactionScreen
 import com.example.presentations.home.components.DashboardAppBar
 import com.example.presentations.home.pages.HomeScreen
+import com.example.presentations.home.viemodel.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 data class BottomNavItem(
@@ -51,6 +53,8 @@ data class BottomNavItem(
 @Composable
 fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = koinViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val homeViewModel: HomeViewModel = koinViewModel()
+    val homeUiState by homeViewModel.uiState.collectAsState()
 
     val navItems = listOf(
         BottomNavItem(
@@ -83,10 +87,21 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
         derivedStateOf { viewModel.mainBackStack.lastOrNull() }
     }
 
+    val selectedMonth by viewModel.selectedMonth
+
     CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
         Scaffold(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            topBar = { DashboardAppBar(onMonthSelect = { viewModel.updateSelectedMonth(it) }) },
+            topBar = {
+                DashboardAppBar(
+                    walletBalance = homeUiState.balance,
+                    onMonthSelect = { month ->
+                        viewModel.updateSelectedMonth(month)
+                        // Directly update HomeViewModel so balance updates even on other tabs
+                        homeViewModel.setMonth(month)
+                    }
+                )
+            },
             bottomBar = {
                 NavigationBar(containerColor = PrimaryBlue) {
                     navItems.forEach { item ->
@@ -122,17 +137,22 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
                     backStack = viewModel.mainBackStack,
                     entryProvider = entryProvider {
                         entry<MainRoute.HomePage> {
-                            HomeScreen()
+                            HomeScreen(
+                                selectedMonth = selectedMonth
+                            )
                         }
                         entry<MainRoute.Transactions> {
-                            CashFlowScreen()
+                            CashFlowScreen(
+                                selectedMonth = selectedMonth
+                            )
                         }
                         entry<MainRoute.InputPage> {
                             InputTransactionScreen()
                         }
                         entry<MainRoute.AnalyticPage> {
-                            val selectedMonth by viewModel.selectedMonth
-                            AnalyticScreen(selectedMonth = selectedMonth)
+                            AnalyticScreen(
+                                selectedMonth = selectedMonth
+                            )
                         }
                     }
 

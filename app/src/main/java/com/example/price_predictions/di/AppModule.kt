@@ -17,9 +17,15 @@ import com.example.data.cashflow.repository.CashFlowRepositoryImpl
 import com.example.data.analytic.datasource.AnalyticNetworkDatasource
 import com.example.data.analytic.datasource.AnalyticNetworkDatasourceImpl
 import com.example.data.analytic.repository.AnalyticRepositoryImpl
+import com.example.data.home.datasource.HomeNetworkDatasource
+import com.example.data.home.datasource.HomeNetworkDatasourceImpl
+import com.example.data.home.repository.HomeRepositoryImpl
 import com.example.domain.analytic.repository.AnalyticRepository
 import com.example.domain.analytic.usecases.GetAnalyticDataUseCase
 import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
+import com.example.domain.home.repository.HomeRepository
+import com.example.domain.home.usecases.GetHomeSummaryUseCase
+import com.example.domain.home.usecases.GetRecentCashFlowsUseCase
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
@@ -59,7 +65,12 @@ fun appModule() = module {
         }
     }
 
-    viewModel { HomeViewModel() }
+    //home
+    single<HomeNetworkDatasource> { HomeNetworkDatasourceImpl(get()) }
+    single<HomeRepository> { HomeRepositoryImpl(get()) }
+    factory { GetHomeSummaryUseCase(get()) }
+    factory { GetRecentCashFlowsUseCase(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 
 
     //navigation app

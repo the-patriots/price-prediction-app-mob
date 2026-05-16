@@ -18,11 +18,18 @@ import androidx.compose.ui.unit.dp
 import com.example.core.ui.theme.Black
 import com.example.core.ui.theme.Danger
 import com.example.core.ui.theme.Success
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
-fun IncomeExpensesBar() {
+fun IncomeExpensesBar(
+    income: Double = 0.0,
+    expense: Double = 0.0
+) {
+    val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+
     Column(modifier = Modifier.padding(start = 10.dp, top = 10.dp)) {
-        Text(text = "Tranksasi bulan ini", fontWeight = FontWeight.Medium, color = Black)
+        Text(text = "Transaksi bulan ini", fontWeight = FontWeight.Medium, color = Black)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -37,7 +44,7 @@ fun IncomeExpensesBar() {
                     tint = Success
                 )
 
-                Text("Rp. 20.0000")
+                Text(formatter.format(income))
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -47,8 +54,7 @@ fun IncomeExpensesBar() {
                     tint = Danger
                 )
 
-
-                Text("Rp. 20.0000")
+                Text(formatter.format(expense))
             }
         }
     }

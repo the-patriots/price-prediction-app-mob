@@ -20,8 +20,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,6 +47,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.core.components.YearSelector
 import com.example.core.constans.enums.InputTransactionEnum
 import com.example.presentations.analytic.state.CategoryAnalytic
 import com.example.presentations.analytic.viewmodel.AnalyticViewModel
@@ -166,38 +165,7 @@ fun AnalyticScreen(
     }
 }
 
-@Composable
-private fun YearSelector(
-    year: Int,
-    onYearChange: (Int) -> Unit,
-) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { onYearChange(year - 1) }) {
-                Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Tahun sebelumnya")
-            }
-            Text(
-                text = year.toString(),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            IconButton(onClick = { onYearChange(year + 1) }) {
-                Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Tahun berikutnya")
-            }
-        }
-    }
-}
+
 
 @Composable
 private fun PieChartSection(

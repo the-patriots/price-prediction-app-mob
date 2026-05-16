@@ -30,7 +30,7 @@ fun CardBudget(
     category: String = "",
     icon: ImageVector = Icons.Rounded.ShoppingCart,
     info: String? = "",
-    amount: Int = 0,
+    amount: Double = 0.0,
     tint: Color = PrimaryBlue,
 ) {
     val formattedCurrency = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(amount)

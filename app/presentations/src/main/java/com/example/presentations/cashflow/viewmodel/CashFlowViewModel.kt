@@ -22,7 +22,22 @@ class CashFlowViewModel(
     private val _state = MutableStateFlow(CashFlowState())
     val state = _state.asStateFlow()
 
+    private var _selectedMonth: String? = null
+    private var _selectedYear: Int = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+
+    val currentYear: Int get() = _selectedYear
+
     init {
+        loadCashFlows()
+    }
+
+    fun updateMonth(month: String?) {
+        _selectedMonth = if (month == "Semua Bulan") null else month
+        loadCashFlows()
+    }
+
+    fun updateYear(year: Int) {
+        _selectedYear = year
         loadCashFlows()
     }
 
@@ -30,17 +45,17 @@ class CashFlowViewModel(
     fun loadCashFlows() {
         _state.update { it.copy(isLoading = true) }
         val type = if (state.value.currentTab == 0 ) InputTransactionEnum.TypeCashFlow.PENGELUARAN else InputTransactionEnum.TypeCashFlow.PEMASUKKAN
+        val month = _selectedMonth ?: ""
         viewModelScope.launch {
             getCashFlowsUseCase(
                 type = type,
-                month = "Mei",
-                year = 2026,
+                month = month,
+                year = _selectedYear,
             ).fold(
-                onSuccess = { data -> _state.update { it.copy(cashFlows = data) }},
-                onFailure = {err -> _state.update { it.copy(error = err.message) }}
+                onSuccess = { data -> _state.update { it.copy(cashFlows = data, isLoading = false) }},
+                onFailure = {err -> _state.update { it.copy(error = err.message, isLoading = false) }}
             )
         }
-        _state.update { it.copy(isLoading = false) }
     }
 
     fun updateTabType(index: Int) {
