@@ -22,7 +22,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.core.ui.theme.Black
+import com.example.core.ui.theme.Danger
+import com.example.core.ui.theme.PrimaryBlue
 
 @Composable
 fun CustomOutlineTextField(
@@ -60,7 +66,8 @@ fun CustomOutlineTextField(
             trailingIcon = if (isPasswordField) {
                 {
                     val description = if (passwordVisible) "Hide password" else "Show password"
-                    val iconText = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val iconText =
+                        if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(imageVector = iconText, contentDescription = description)
@@ -72,7 +79,14 @@ fun CustomOutlineTextField(
             keyboardActions = keyboardActions,
             isError = isError,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp)
+            shape = RoundedCornerShape(24.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = PrimaryBlue,
+                focusedLabelColor = PrimaryBlue,
+                focusedLeadingIconColor = PrimaryBlue,
+                errorLeadingIconColor = Danger,
+                errorBorderColor = Danger
+            )
         )
         if (isError && errorMessage != null) {
             Text(

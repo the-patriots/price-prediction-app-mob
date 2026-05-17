@@ -11,6 +11,7 @@ import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.functions.functions
+import io.github.jan.supabase.postgrest.query.Order
 import io.ktor.client.call.body
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -37,7 +38,7 @@ class CashFLowNetworkDatasourceImpl(
 ) : CashFlowNetworkDatasource {
     override suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse> {
         return try {
-            val userID =  _supabaseClient.auth.sessionManager.loadSession()?.let {
+            val userID = _supabaseClient.auth.sessionManager.loadSession()?.let {
                 it.user?.id
             }
             if (userID.isNullOrBlank()) throw (Exception("no session found"))
@@ -62,7 +63,11 @@ class CashFLowNetworkDatasourceImpl(
         }
     }
 
-    override suspend fun checkAiPrice(category: String, productName: String, price: Double): Result<String> {
+    override suspend fun checkAiPrice(
+        category: String,
+        productName: String,
+        price: Double
+    ): Result<String> {
         return try {
             val jsonBody = buildJsonObject {
                 put("category", category)
@@ -74,7 +79,8 @@ class CashFLowNetworkDatasourceImpl(
                 setBody(jsonBody.toString())
             }
             val jsonString = response.body<String>()
-            val result = Json { ignoreUnknownKeys = true }.decodeFromString<PredictPriceResponse>(jsonString)
+            val result =
+                Json { ignoreUnknownKeys = true }.decodeFromString<PredictPriceResponse>(jsonString)
             Result.success(result.prediction)
         } catch (e: Exception) {
             Result.failure(e)
@@ -88,7 +94,7 @@ class CashFLowNetworkDatasourceImpl(
         search: String
     ): Result<List<CashFlowModel>> {
         try {
-           val userID =  _supabaseClient.auth.sessionManager.loadSession()?.let {
+            val userID = _supabaseClient.auth.sessionManager.loadSession()?.let {
                 it.user?.id
             }
 
@@ -109,6 +115,8 @@ class CashFLowNetworkDatasourceImpl(
                         }
                     }
                 }
+
+                order(column = "created_at", order = Order.DESCENDING)
             }.decodeList<CashFlowModel>()
 
             return Result.success(result)

@@ -9,8 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.example.core.ui.theme.PrimaryBlue
 import com.example.presentations.auth.pages.LoginPage
 import com.example.presentations.auth.pages.SignUpPage
 import org.koin.androidx.compose.koinViewModel
@@ -21,9 +23,7 @@ fun AuthMainScaffold(modifier: Modifier = Modifier, viewModel: AuthNavViewModel 
 
     Scaffold(
         topBar = {
-            TopAppBar(title = {
-                Text("Price Prediction")
-            })
+            TopAppBar(title = {})
         }
     ) {
         NavDisplay(

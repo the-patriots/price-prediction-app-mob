@@ -17,7 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import com.example.core.constans.enums.DropDownItem
+import com.example.core.ui.theme.Danger
+import com.example.core.ui.theme.PrimaryBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +52,13 @@ fun <T> CustomTextFieldDropDown(
             },
             modifier = Modifier.menuAnchor().fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = PrimaryBlue,
+                focusedLabelColor = PrimaryBlue,
+                focusedLeadingIconColor = PrimaryBlue,
+                errorLeadingIconColor = Danger,
+                errorBorderColor = Danger
+            )
         )
         ExposedDropdownMenu(
             expanded = expanded,

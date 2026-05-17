@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.ui.graphics.Color
 import com.example.core.components.CustomOutlineTextField
 import com.example.core.components.CustomTextFieldDropDown
@@ -69,7 +70,16 @@ fun InputTransactionScreen(
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)) {
-        TabRow(selectedTabIndex = state.currentTab) {
+        TabRow(
+            selectedTabIndex = state.currentTab,
+            contentColor = PrimaryBlue,
+            indicator = { tabPositions ->
+                TabRowDefaults.PrimaryIndicator(
+                    color = PrimaryBlue,
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[state.currentTab])
+                )
+            }
+        ) {
             InputTransactionEnum.TypeCashFlow.entries.forEachIndexed { index, title ->
                 Tab(
                     selected = state.currentTab == index,

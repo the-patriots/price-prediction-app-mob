@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.ButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.example.core.components.CustomOutlineTextField
 import com.example.core.components.Validators
 import com.example.core.components.animations.SlideAnimationTransition
+import com.example.core.ui.theme.PrimaryBlue
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.R
 import org.koin.androidx.compose.koinViewModel
@@ -122,8 +124,9 @@ fun LoginPage(
                         { Validators.isNotEmpty(it) },
                         { Validators.isValidEmail(it) }
                     ),
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    modifier = Modifier.fillMaxWidth(),
+
+                    )
             }
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -151,7 +154,13 @@ fun LoginPage(
                 Button(
                     onClick = { viewModel.login() },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isLoading && state.isFormValid
+                    enabled = !state.isLoading && state.isFormValid,
+                    colors = ButtonColors(
+                        containerColor = PrimaryBlue,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.LightGray,
+                        disabledContentColor = Color.Gray
+                    )
                 ) {
                     Text("Login")
                 }
@@ -163,7 +172,7 @@ fun LoginPage(
             SlideAnimationTransition(visible = visible, delayMillis = 400) {
                 Text(
                     text = "Belum punya akun? Daftar",
-                    color = MaterialTheme.colorScheme.primary,
+                    color = PrimaryBlue,
                     modifier = Modifier.clickable { onSignUpClick() }
                 )
             }

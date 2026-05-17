@@ -24,6 +24,8 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -67,7 +69,16 @@ fun CashFlowScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TabRow(selectedTabIndex = state.currentTab, contentColor = PrimaryBlue) {
+        TabRow(
+            selectedTabIndex = state.currentTab,
+            contentColor = PrimaryBlue,
+            indicator = { tabPositions ->
+                TabRowDefaults.PrimaryIndicator(
+                    color = PrimaryBlue,
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[state.currentTab])
+                )
+            }
+        ) {
             InputTransactionEnum.TypeCashFlow.entries.forEachIndexed { index, title ->
                 Tab(
                     selected = state.currentTab == index,
@@ -134,7 +145,7 @@ fun CashFlowScreen(
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = "Delete",
-                                tint = Color.White
+                                tint = Color.Transparent
                             )
                         }
                     }

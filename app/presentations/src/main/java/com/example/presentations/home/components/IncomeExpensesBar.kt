@@ -44,7 +44,7 @@ fun IncomeExpensesBar(
                     tint = Success
                 )
 
-                Text(formatter.format(income))
+                Text(text = formatter.format(income), fontWeight = FontWeight.Medium)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -54,7 +54,7 @@ fun IncomeExpensesBar(
                     tint = Danger
                 )
 
-                Text(formatter.format(expense))
+                Text(text = formatter.format(expense), fontWeight = FontWeight.Medium)
             }
         }
     }

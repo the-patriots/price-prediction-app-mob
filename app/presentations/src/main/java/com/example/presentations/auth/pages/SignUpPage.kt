@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.ButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,6 +42,7 @@ import com.example.core.components.CustomOutlineTextField
 import com.example.core.components.ValidationResult
 import com.example.core.components.Validators
 import com.example.core.components.animations.SlideAnimationTransition
+import com.example.core.ui.theme.PrimaryBlue
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.R
 import org.koin.androidx.compose.koinViewModel
@@ -153,7 +155,12 @@ fun SignUpPage(
                     value = state.repassword,
                     onValueChange = { viewModel.onRepasswordChange(it) },
                     label = "Confirm Password",
-                    leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Confirm Password Icon") },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Lock,
+                            contentDescription = "Confirm Password Icon"
+                        )
+                    },
                     validators = listOf(
                         { Validators.isNotEmpty(it) },
                         {
@@ -175,7 +182,13 @@ fun SignUpPage(
                 Button(
                     onClick = { viewModel.signUp() },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isLoading && state.isFormValid
+                    enabled = !state.isLoading && state.isFormValid,
+                    colors = ButtonColors(
+                        containerColor = PrimaryBlue,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.LightGray,
+                        disabledContentColor = Color.Gray
+                    )
                 ) {
                     Text("Sign Up")
                 }
@@ -187,7 +200,7 @@ fun SignUpPage(
             SlideAnimationTransition(visible = visible, delayMillis = 480) {
                 Text(
                     text = "Sudah punya akun? Login",
-                    color = MaterialTheme.colorScheme.primary,
+                    color = PrimaryBlue,
                     modifier = Modifier.clickable { onLoginClick() }
                 )
             }

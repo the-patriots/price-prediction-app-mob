@@ -31,6 +31,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.core.components.YearSelector
 import com.example.core.constans.enums.InputTransactionEnum
+import com.example.core.ui.theme.PrimaryBlue
 import com.example.presentations.analytic.state.CategoryAnalytic
 import com.example.presentations.analytic.viewmodel.AnalyticViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -77,7 +80,16 @@ fun AnalyticScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TabRow(selectedTabIndex = state.currentTab) {
+        TabRow(
+            selectedTabIndex = state.currentTab,
+            contentColor = PrimaryBlue,
+            indicator = { tabPositions ->
+                TabRowDefaults.PrimaryIndicator(
+                    color = PrimaryBlue,
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[state.currentTab])
+                )
+            }
+        ) {
             InputTransactionEnum.TypeCashFlow.entries.forEachIndexed { index, type ->
                 Tab(
                     selected = state.currentTab == index,

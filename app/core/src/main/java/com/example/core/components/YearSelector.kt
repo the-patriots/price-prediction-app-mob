@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.core.ui.theme.PrimaryBlue
 
 @Composable
 fun YearSelector(
@@ -41,15 +42,24 @@ fun YearSelector(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { onYearChange(year - 1) }) {
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Tahun sebelumnya")
+                Icon(
+                    Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = "Tahun sebelumnya",
+                    tint = PrimaryBlue
+                )
             }
             Text(
                 text = year.toString(),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = PrimaryBlue,
             )
             IconButton(onClick = { onYearChange(year + 1) }) {
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Tahun berikutnya")
+                Icon(
+                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Tahun berikutnya",
+                    tint = PrimaryBlue
+                )
             }
         }
     }
