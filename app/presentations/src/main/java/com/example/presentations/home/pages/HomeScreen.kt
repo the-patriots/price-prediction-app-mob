@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.core.components.YearSelector
@@ -100,7 +101,7 @@ fun HomeScreen(
         // 3. Divider — delay 200ms
         HomeItem(delayMillis = 200, visible = visible, modifier = Modifier.fillMaxWidth()) {
             HorizontalDivider(
-                color = Black,
+                color = Color.LightGray,
                 modifier = Modifier.padding(10.dp),
                 thickness = 1.5f.dp
             )
