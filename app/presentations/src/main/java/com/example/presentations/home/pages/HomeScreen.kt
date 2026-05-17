@@ -44,6 +44,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         YearSelector(
+            modifier = Modifier.padding(horizontal = 16.dp),
             year = uiState.year,
             onYearChange = { viewModel.setYear(it) }
         )

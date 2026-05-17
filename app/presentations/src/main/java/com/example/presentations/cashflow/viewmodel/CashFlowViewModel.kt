@@ -6,9 +6,9 @@ import com.example.core.constans.enums.DropDownItem
 import com.example.core.constans.enums.InputTransactionEnum
 import com.example.domain.cashflow.usecases.CheckAiPriceUseCase
 import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
+import com.example.domain.cashflow.usecases.DeleteCashFlowUseCase
 import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
 import com.example.presentations.cashflow.state.CashFlowState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,6 +18,7 @@ class CashFlowViewModel(
     private val createCashFlowUseCase: CreateCashFlowUseCase,
     private val checkAiPriceUseCase: CheckAiPriceUseCase,
     private val getCashFlowsUseCase: GetCashFlowsUseCase,
+    private val deleteCashFlowUseCase: DeleteCashFlowUseCase,
 ): ViewModel() {
     private val _state = MutableStateFlow(CashFlowState())
     val state = _state.asStateFlow()
@@ -140,21 +141,32 @@ class CashFlowViewModel(
             return
         }
 
+        // If pemasukan (income), bypass AI check and save directly
+        if (currentState.currentTab == 1) {
+            directSave()
+            return
+        }
+
         _state.update { it.copy(isCheckingAi = true, isLoading = true, error = null, success = null) }
 
         viewModelScope.launch {
+            val category = currentState.payload.cashFlow.category
             val description = currentState.payload.cashFlow.description ?: ""
             val amount = currentState.payload.cashFlow.amount
             
-            val result = checkAiPriceUseCase(description, amount)
+            val result = checkAiPriceUseCase(
+                category = category,
+                productName = description,
+                price = amount
+            )
             
-            result.onSuccess { msg ->
+            result.onSuccess { prediction ->
                 _state.update {
                     it.copy(
                         isCheckingAi = false,
                         isLoading = false,
                         showAiDialog = true,
-                        aiResultText = msg
+                        aiResultText = prediction
                     )
                 }
             }.onFailure { err ->
@@ -172,10 +184,21 @@ class CashFlowViewModel(
     fun confirmSave() {
         val currentState = _state.value
 
-        _state.update { it.copy(isLoading = true, error = null, success = null, showAiDialog = false) }
+        // Set the prediction result into the cashflow payload before saving
+        _state.update {
+            it.copy(
+                isLoading = true,
+                error = null,
+                success = null,
+                showAiDialog = false,
+                payload = it.payload.copy(
+                    cashFlow = it.payload.cashFlow.copy(result = it.aiResultText)
+                )
+            )
+        }
 
         viewModelScope.launch {
-            val result = createCashFlowUseCase(currentState.payload)
+            val result = createCashFlowUseCase(_state.value.payload)
             result.onSuccess { msg ->
                 _state.update { 
                     it.copy(
@@ -184,12 +207,14 @@ class CashFlowViewModel(
                         error = null,
                         amountString = "",
                         dateString = "",
+                        aiResultText = "",
                         payload = it.payload.copy(
                             cashFlow = it.payload.cashFlow.copy(
                                 amount = 0.0,
                                 description = "",
                                 month = "",
-                                year = 2026
+                                year = 2026,
+                                result = null
                             )
                         )
                     )
@@ -205,7 +230,62 @@ class CashFlowViewModel(
         }
     }
 
+    private fun directSave() {
+        _state.update { it.copy(isLoading = true, error = null, success = null) }
+
+        viewModelScope.launch {
+            val result = createCashFlowUseCase(_state.value.payload)
+            result.onSuccess { msg ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        success = msg,
+                        error = null,
+                        amountString = "",
+                        dateString = "",
+                        payload = it.payload.copy(
+                            cashFlow = it.payload.cashFlow.copy(
+                                amount = 0.0,
+                                description = "",
+                                month = "",
+                                year = 2026,
+                                result = null
+                            )
+                        )
+                    )
+                }
+            }.onFailure { err ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = err.message ?: "Unknown error occurred"
+                    )
+                }
+            }
+        }
+    }
+
     fun cancelSave() {
         _state.update { it.copy(showAiDialog = false, aiResultText = "") }
+    }
+
+    fun deleteCashFlow(id: String) {
+        _state.update { it.copy(isLoading = true, error = null, success = null) }
+        viewModelScope.launch {
+            deleteCashFlowUseCase(id).fold(
+                onSuccess = {
+                    _state.update { it.copy(success = "Transaksi berhasil dihapus") }
+                    loadCashFlows()
+                },
+                onFailure = { err ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = err.message ?: "Gagal menghapus transaksi"
+                        )
+                    }
+                }
+            )
+        }
     }
 }

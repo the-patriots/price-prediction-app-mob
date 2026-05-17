@@ -8,5 +8,6 @@ data class CashFlow(
     val createdAt: String?,
     val month: String,
     val year: Int,
-    val description: String?
+    val description: String?,
+    val result: String? = null
 )

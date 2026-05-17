@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,10 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,10 +32,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.ui.theme.PrimaryBlue
+import com.example.price_predictions.R
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
@@ -45,12 +45,12 @@ fun SplashScreen(modifier: Modifier = Modifier) {
     var startAnimation by remember { mutableStateOf(false) }
     val alphaAnim by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing),
         label = "splashAlpha"
     )
     val scaleAnim by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0.6f,
-        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+        targetValue = if (startAnimation) 1f else 0.55f,
+        animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing),
         label = "splashScale"
     )
 
@@ -58,9 +58,9 @@ fun SplashScreen(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "splashPulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.15f,
+        targetValue = 1.18f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = FastOutSlowInEasing),
+            animation = tween(1100, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "pulseScale"
@@ -92,44 +92,44 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                 .scale(scaleAnim)
                 .alpha(alphaAnim)
         ) {
-            // Glow circle behind icon
+            // Glow circle behind logo
             Box(contentAlignment = Alignment.Center) {
                 Box(
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(140.dp)
                         .scale(pulseScale)
-                        .alpha(0.25f)
+                        .alpha(0.20f)
                         .background(Color.White, shape = CircleShape)
                 )
                 Box(
                     modifier = Modifier
-                        .size(96.dp)
+                        .size(112.dp)
                         .background(
-                            color = Color.White.copy(alpha = 0.2f),
+                            color = Color.White.copy(alpha = 0.18f),
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Home,
+                    // White picsvg logo (fillColor="#ffffff" in the XML)
+                    Image(
+                        painter = painterResource(id = R.drawable.picsvg_download),
                         contentDescription = "App Logo",
-                        tint = Color.White,
-                        modifier = Modifier.size(52.dp)
+                        modifier = Modifier.size(64.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Price Prediction",
+                text = "Dompet Ibu",
                 color = Color.White,
-                fontSize = 26.sp,
+                fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
+                letterSpacing = 0.5.sp
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 text = "Kelola keuanganmu dengan cerdas",

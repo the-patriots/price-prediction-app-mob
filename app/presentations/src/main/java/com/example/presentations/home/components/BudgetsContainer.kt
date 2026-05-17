@@ -15,7 +15,8 @@ fun BudgetsContainer(cashFlows: List<CashFlow> = emptyList()) {
             CardBudget(
                 category = cashFlow.category,
                 info = cashFlow.description,
-                amount = cashFlow.amount
+                amount = cashFlow.amount,
+                result = cashFlow.result,
             )
         }
     }

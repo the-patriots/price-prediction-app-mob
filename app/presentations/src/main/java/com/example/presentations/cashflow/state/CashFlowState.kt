@@ -17,7 +17,8 @@ data class CashFlowState(
             createdAt = null,
             month = "",
             year = 2026,
-            description = ""
+            description = "",
+            result = null
         )
     ),
     val cashFlows: List<CashFlowEntity> = emptyList(),

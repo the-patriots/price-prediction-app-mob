@@ -14,6 +14,7 @@ data class CashFlowPayloadModel(
     val month: String,
     val year: Int,
     val description: String,
+    val result: String? = null,
 ) {
     companion object {
         fun fromDomain(payload: DomainCashFlowPayload): CashFlowPayloadModel {
@@ -24,6 +25,7 @@ data class CashFlowPayloadModel(
                 month = payload.cashFlow.month,
                 year = payload.cashFlow.year,
                 description = payload.cashFlow.description ?: "",
+                result = payload.cashFlow.result,
                 userId = "",
             )
         }

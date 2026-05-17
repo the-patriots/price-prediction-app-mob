@@ -21,7 +21,9 @@ data class CashFlowModel(
     @SerialName("year")
     val year: Int,
     @SerialName("description")
-    val description: String?
+    val description: String?,
+    @SerialName("result")
+    val result: String? = null
 ) {
     companion object {
         fun fromDomain(domain: CashFlow): CashFlowModel {
@@ -33,7 +35,8 @@ data class CashFlowModel(
                 createdAt = domain.createdAt,
                 month = domain.month,
                 year = domain.year,
-                description = domain.description
+                description = domain.description,
+                result = domain.result
             )
         }
     }
@@ -47,7 +50,8 @@ data class CashFlowModel(
             createdAt = this.createdAt,
             month = this.month,
             year = this.year,
-            description = this.description
+            description = this.description,
+            result = this.result
         )
     }
 }

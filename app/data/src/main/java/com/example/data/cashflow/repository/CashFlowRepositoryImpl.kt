@@ -16,12 +16,12 @@ class CashFlowRepositoryImpl(
         return response.map { it.message ?: "Success" }
     }
 
-    override suspend fun deleteCashFlow(id: String) {
-        cashFlowNetworkDatasource.deleteCashFlow(id)
+    override suspend fun deleteCashFlow(id: String): Result<Unit> {
+        return cashFlowNetworkDatasource.deleteCashFlow(id)
     }
 
-    override suspend fun checkAiPrice(description: String, amount: Double): Result<String> {
-        return cashFlowNetworkDatasource.checkAiPrice(description, amount)
+    override suspend fun checkAiPrice(category: String, productName: String, price: Double): Result<String> {
+        return cashFlowNetworkDatasource.checkAiPrice(category, productName, price)
     }
 
     override suspend fun getCashflows(
@@ -38,7 +38,8 @@ class CashFlowRepositoryImpl(
                type = it.type,
                category = it.category,
                description = it.description,
-               amount = it.amount
+               amount = it.amount,
+               result = it.result
            ) })
        }catch (e: Exception) {
            return Result.failure(e)

@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun YearSelector(
+    modifier: Modifier = Modifier,
     year: Int,
     onYearChange: (Int) -> Unit,
 ) {
     Card(
+        modifier = modifier,
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant

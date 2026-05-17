@@ -1,6 +1,8 @@
 package com.example.core.components.animations
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 
 @Composable
 fun SlideAnimationTransition(
@@ -23,19 +26,31 @@ fun SlideAnimationTransition(
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(visible) {
-        isVisible = visible
+        if (visible) {
+            delay(delayMillis.toLong())
+            isVisible = true
+        } else {
+            isVisible = false
+        }
     }
 
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically(
-            initialOffsetY = { it / 2 },
-            animationSpec = tween(durationMillis = durationMillis, delayMillis = delayMillis)
-        ) + fadeIn(animationSpec = tween(durationMillis = durationMillis, delayMillis = delayMillis)),
-        exit = slideOutVertically(
-            targetOffsetY = { it / 2 },
+            initialOffsetY = { fullHeight -> fullHeight / 3 },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMediumLow
+            )
+        ) + fadeIn(
             animationSpec = tween(durationMillis = durationMillis)
-        ) + fadeOut(animationSpec = tween(durationMillis = durationMillis))
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight / 4 },
+            animationSpec = tween(durationMillis = (durationMillis * 0.6f).toInt())
+        ) + fadeOut(
+            animationSpec = tween(durationMillis = (durationMillis * 0.6f).toInt())
+        )
     ) {
         content()
     }

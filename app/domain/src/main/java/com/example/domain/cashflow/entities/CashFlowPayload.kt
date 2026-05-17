@@ -12,4 +12,5 @@ data class CashFlowEntity(
     val category: String,
     val description: String?,
     val amount: Double,
+    val result: String? = null,
 )

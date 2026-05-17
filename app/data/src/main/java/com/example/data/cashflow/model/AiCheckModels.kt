@@ -3,8 +3,11 @@ package com.example.data.cashflow.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AiCheckPayload(val description: String, val amount: Double)
+data class PredictPricePayload(
+    val category: String,
+    val price: Double,
+    val productName: String
+)
 
 @Serializable
-data class AiCheckResponse(val result: String)
-
+data class PredictPriceResponse(val prediction: String)

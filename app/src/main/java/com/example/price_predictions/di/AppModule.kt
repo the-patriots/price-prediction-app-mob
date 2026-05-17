@@ -11,6 +11,7 @@ import com.example.domain.auth.usecases.SignUpUseCase
 import com.example.domain.cashflow.repository.CashFlowRepository
 import com.example.domain.cashflow.usecases.CheckAiPriceUseCase
 import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
+import com.example.domain.cashflow.usecases.DeleteCashFlowUseCase
 import com.example.data.cashflow.datasource.CashFlowNetworkDatasource
 import com.example.data.cashflow.datasource.CashFLowNetworkDatasourceImpl
 import com.example.data.cashflow.repository.CashFlowRepositoryImpl
@@ -96,7 +97,8 @@ fun appModule() = module {
     factory { CreateCashFlowUseCase(get()) }
     factory { CheckAiPriceUseCase(get()) }
     factory { GetCashFlowsUseCase(get()) }
-    viewModel { CashFlowViewModel(get(),get(), get()) }
+    factory { DeleteCashFlowUseCase(get()) }
+    viewModel { CashFlowViewModel(get(), get(), get(), get()) }
 
     //analytic
     single<AnalyticNetworkDatasource> { AnalyticNetworkDatasourceImpl(get()) }

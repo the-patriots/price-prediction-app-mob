@@ -1,5 +1,6 @@
 package com.example.data.auth.datasource
 
+import com.example.data.auth.models.UserInsertModel
 import com.example.data.auth.models.UserModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
@@ -49,7 +50,13 @@ class AuthNetworkDatasourceImpl(private val supabase: SupabaseClient) : AuthNetw
             }
             val currentUser = supabase.auth.currentUserOrNull()
             if (currentUser != null) {
-                supabase.from("users").insert(currentUser)
+                val userInsert = UserInsertModel(
+                    id = currentUser.id,
+                    name = username.substringBefore("@"),
+                    email = currentUser.email ?: username,
+                    balance = 0.0
+                )
+                supabase.from("users").insert(userInsert)
                 Result.success(
                     UserModel(
                         id = currentUser.id,
