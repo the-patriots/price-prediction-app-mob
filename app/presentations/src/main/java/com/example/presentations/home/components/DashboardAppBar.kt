@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ExitToApp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +33,8 @@ import java.util.Locale
 @Composable
 fun DashboardAppBar(
     walletBalance: Double = 0.0,
-    onMonthSelect: (String) -> Unit
+    onMonthSelect: (String) -> Unit,
+    onLogout: () -> Unit = {}
 ) {
     val formattedBalance = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(walletBalance)
 
@@ -63,6 +68,13 @@ fun DashboardAppBar(
                     )
                 )
                 MonthDropdown(onSelect = { onMonthSelect(it) })
+                IconButton(onClick = onLogout) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ExitToApp,
+                        contentDescription = "Logout",
+                        tint = Color.White
+                    )
+                }
             }
 
             DashboardAppBarWallet(formattedBalance)

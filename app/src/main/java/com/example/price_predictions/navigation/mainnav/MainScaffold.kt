@@ -41,6 +41,7 @@ import com.example.presentations.cashflow.pages.InputTransactionScreen
 import com.example.presentations.home.components.DashboardAppBar
 import com.example.presentations.home.pages.HomeScreen
 import com.example.presentations.home.viemodel.HomeViewModel
+import com.example.price_predictions.navigation.AppNavViewModel
 import org.koin.androidx.compose.koinViewModel
 
 data class BottomNavItem(
@@ -51,7 +52,11 @@ data class BottomNavItem(
 )
 
 @Composable
-fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = koinViewModel()) {
+fun MainScaffold(
+    modifier: Modifier = Modifier,
+    viewModel: MainNavViewModel = koinViewModel(),
+    appNavViewModel: AppNavViewModel = koinViewModel()
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val homeViewModel: HomeViewModel = koinViewModel()
     val homeUiState by homeViewModel.uiState.collectAsState()
@@ -99,7 +104,8 @@ fun MainScaffold(modifier: Modifier = Modifier, viewModel: MainNavViewModel = ko
                         viewModel.updateSelectedMonth(month)
                         // Directly update HomeViewModel so balance updates even on other tabs
                         homeViewModel.setMonth(month)
-                    }
+                    },
+                    onLogout = { appNavViewModel.signOut() }
                 )
             },
             bottomBar = {

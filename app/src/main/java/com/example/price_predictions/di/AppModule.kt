@@ -31,7 +31,7 @@ import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
 import com.example.presentations.cashflow.viewmodel.CashFlowViewModel
 import com.example.presentations.analytic.viewmodel.AnalyticViewModel
-import com.example.price_predictions.navigation.AppNavigationState
+import com.example.price_predictions.navigation.AppNavViewModel
 import com.example.price_predictions.navigation.authnav.AuthNavViewModel
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
@@ -74,7 +74,7 @@ fun appModule() = module {
 
 
     //navigation app
-    single { AppNavigationState() }
+    viewModel { AppNavViewModel(get()) }
 
     //navigation auth
     viewModel { AuthNavViewModel() }
