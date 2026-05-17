@@ -30,6 +30,7 @@ prediction result: enum
 ### Response Body
 ```json
 {
-  "prediction": "string"
+  "prediction": "string",
+  "marketPrice": 0
 }
 ```
