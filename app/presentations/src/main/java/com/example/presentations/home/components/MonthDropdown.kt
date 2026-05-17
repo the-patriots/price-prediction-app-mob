@@ -30,8 +30,9 @@ import com.example.core.ui.theme.Black
 @Composable
 fun MonthDropdown(onSelect: (String) -> Unit) {
     var expand by remember { mutableStateOf(false) }
-    var selectedMonth by remember { mutableStateOf("Januari") }
+    var selectedMonth by remember { mutableStateOf("Semua Bulan") }
     val months = listOf(
+        "Semua Bulan",
         "Januari",
         "Februari",
         "Maret",

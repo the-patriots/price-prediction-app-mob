@@ -1,9 +1,11 @@
 package com.example.data.auth.datasource
 
+import com.example.data.auth.models.UserInsertModel
 import com.example.data.auth.models.UserModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
 
 interface AuthNetworkDatasource {
     suspend fun login(username: String, password: String): Result<UserModel>
@@ -32,8 +34,8 @@ class AuthNetworkDatasourceImpl(private val supabase: SupabaseClient) : AuthNetw
             } else {
                 Result.failure(Exception("User not found after login"))
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (_: Exception) {
+            Result.failure(Exception("Something went wrong"))
         }
     }
 
@@ -48,6 +50,13 @@ class AuthNetworkDatasourceImpl(private val supabase: SupabaseClient) : AuthNetw
             }
             val currentUser = supabase.auth.currentUserOrNull()
             if (currentUser != null) {
+                val userInsert = UserInsertModel(
+                    id = currentUser.id,
+                    name = username.substringBefore("@"),
+                    email = currentUser.email ?: username,
+                    balance = 0.0
+                )
+                supabase.from("users").insert(userInsert)
                 Result.success(
                     UserModel(
                         id = currentUser.id,
@@ -59,8 +68,9 @@ class AuthNetworkDatasourceImpl(private val supabase: SupabaseClient) : AuthNetw
                 // SignUp might require email confirmation, so user could be null initially
                 Result.success(UserModel(email = username))
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (_: Exception) {
+            Result.failure(Exception("Something went wrong"))
+
         }
     }
 }

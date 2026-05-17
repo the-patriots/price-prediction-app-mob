@@ -17,19 +17,33 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.core.ui.theme.Black
+import com.example.core.ui.theme.Danger
+import com.example.core.ui.theme.PrimaryBlue
 
 @Composable
 fun CustomOutlineTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    maxLines: Int = 1,
+    readOnly: Boolean = false,
+    enabled: Boolean = true,
     label: String = "",
     leadingIcon: @Composable (() -> Unit)? = null,
     validators: List<(String) -> ValidationResult> = emptyList(),
-    isPasswordField: Boolean = false
+    isPasswordField: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -37,6 +51,9 @@ fun CustomOutlineTextField(
 
     Column(modifier = modifier) {
         OutlinedTextField(
+            readOnly = readOnly,
+            enabled = enabled,
+            maxLines = maxLines,
             value = value,
             onValueChange = { newValue ->
                 onValueChange(newValue)
@@ -49,7 +66,8 @@ fun CustomOutlineTextField(
             trailingIcon = if (isPasswordField) {
                 {
                     val description = if (passwordVisible) "Hide password" else "Show password"
-                    val iconText = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val iconText =
+                        if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(imageVector = iconText, contentDescription = description)
@@ -57,8 +75,18 @@ fun CustomOutlineTextField(
                 }
             } else null,
             visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             isError = isError,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = PrimaryBlue,
+                focusedLabelColor = PrimaryBlue,
+                focusedLeadingIconColor = PrimaryBlue,
+                errorLeadingIconColor = Danger,
+                errorBorderColor = Danger
+            )
         )
         if (isError && errorMessage != null) {
             Text(

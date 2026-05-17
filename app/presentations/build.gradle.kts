@@ -60,5 +60,6 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation("io.insert-koin:koin-android:3.5.6")
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
-
+    implementation("androidx.room:room-ktx:2.8.4")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }

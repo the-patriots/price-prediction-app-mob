@@ -14,7 +14,7 @@ val Black = Color(0xFF333333)
 
 val PrimaryBlue = Color(0xFF3DA0F1)
 val Danger = Color(0xFFFF0000)
-val Success = Color(0xFF005F02)
+val Success = Color(0xFF10D712)
 
 val PrimaryGradient = listOf(
     PrimaryBlue, Color(0xFF78F2F6)

@@ -8,18 +8,41 @@ import com.example.data.auth.repository.AuthRepositoryImpl
 import com.example.domain.auth.repository.AuthRepository
 import com.example.domain.auth.usecases.LoginUseCase
 import com.example.domain.auth.usecases.SignUpUseCase
+import com.example.domain.cashflow.repository.CashFlowRepository
+import com.example.domain.cashflow.usecases.CheckAiPriceUseCase
+import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
+import com.example.domain.cashflow.usecases.DeleteCashFlowUseCase
+import com.example.data.cashflow.datasource.CashFlowNetworkDatasource
+import com.example.data.cashflow.datasource.CashFLowNetworkDatasourceImpl
+import com.example.data.cashflow.repository.CashFlowRepositoryImpl
+import com.example.data.analytic.datasource.AnalyticNetworkDatasource
+import com.example.data.analytic.datasource.AnalyticNetworkDatasourceImpl
+import com.example.data.analytic.repository.AnalyticRepositoryImpl
+import com.example.data.home.datasource.HomeNetworkDatasource
+import com.example.data.home.datasource.HomeNetworkDatasourceImpl
+import com.example.data.home.repository.HomeRepositoryImpl
+import com.example.domain.analytic.repository.AnalyticRepository
+import com.example.domain.analytic.usecases.GetAnalyticDataUseCase
+import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
+import com.example.domain.home.repository.HomeRepository
+import com.example.domain.home.usecases.GetHomeSummaryUseCase
+import com.example.domain.home.usecases.GetRecentCashFlowsUseCase
 import com.example.presentations.auth.viewmodel.LoginPageViewModel
 import com.example.presentations.auth.viewmodel.SignUpViewModel
 import com.example.presentations.home.viemodel.HomeViewModel
-import com.example.price_predictions.navigation.AppNavigationState
+import com.example.presentations.cashflow.viewmodel.CashFlowViewModel
+import com.example.presentations.analytic.viewmodel.AnalyticViewModel
+import com.example.price_predictions.navigation.AppNavViewModel
 import com.example.price_predictions.navigation.authnav.AuthNavViewModel
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.functions.Functions
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.price_predictions.BuildConfig
 import com.example.price_predictions.navigation.mainnav.MainNavViewModel
+import org.koin.core.module.dsl.singleOf
 
 import org.koin.dsl.module
 
@@ -39,14 +62,20 @@ fun appModule() = module {
         ) {
             install(Auth)
             install(Postgrest)
+            install(Functions)
         }
     }
 
-    viewModel { HomeViewModel() }
+    //home
+    single<HomeNetworkDatasource> { HomeNetworkDatasourceImpl(get()) }
+    single<HomeRepository> { HomeRepositoryImpl(get()) }
+    factory { GetHomeSummaryUseCase(get()) }
+    factory { GetRecentCashFlowsUseCase(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 
 
     //navigation app
-    single { AppNavigationState() }
+    viewModel { AppNavViewModel(get()) }
 
     //navigation auth
     viewModel { AuthNavViewModel() }
@@ -61,4 +90,19 @@ fun appModule() = module {
     single { SignUpUseCase(get()) }
     viewModel { LoginPageViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
+
+    //cashflow
+    single<CashFlowNetworkDatasource> { CashFLowNetworkDatasourceImpl(get()) }
+    single<CashFlowRepository> { CashFlowRepositoryImpl(get()) }
+    factory { CreateCashFlowUseCase(get()) }
+    factory { CheckAiPriceUseCase(get()) }
+    factory { GetCashFlowsUseCase(get()) }
+    factory { DeleteCashFlowUseCase(get()) }
+    viewModel { CashFlowViewModel(get(), get(), get(), get()) }
+
+    //analytic
+    single<AnalyticNetworkDatasource> { AnalyticNetworkDatasourceImpl(get()) }
+    single<AnalyticRepository> { AnalyticRepositoryImpl(get()) }
+    single { GetAnalyticDataUseCase(get()) }
+    viewModel { AnalyticViewModel(get()) }
 }
