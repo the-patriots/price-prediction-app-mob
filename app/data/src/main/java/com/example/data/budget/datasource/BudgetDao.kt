@@ -3,7 +3,7 @@ package com.example.data.budget.datasource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.data.budget.models.Budget
+import com.example.data.budget.models.BudgetModel
 
 @Dao
 interface BudgetDao {
@@ -14,5 +14,5 @@ interface BudgetDao {
     fun findByYear(year: Int)
 
     @Insert
-    fun insertBudget(budget: Budget)
+    fun insertBudget(budget: BudgetModel)
 }

@@ -67,4 +67,19 @@ class HomeViewModel(
             _uiState.update { it.copy(isLoading = false) }
         }
     }
+
+    fun getBudgets() {
+        viewModelScope.launch {
+            getBudgetsUseCase().fold(
+                onSuccess = {
+                    _uiState.update { _uiState.value.copy(budgets = it.budgets) }
+                },
+                onFailure = {
+                    println(it.toString())
+                    _uiState.update { _uiState.value.copy(isError = true) }
+
+                }
+            )
+        }
+    }
 }
