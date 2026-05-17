@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -51,10 +53,10 @@ fun SignUpPage(
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-    var startAnimation by remember { mutableStateOf(false) }
+    var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        startAnimation = true
+        visible = true
     }
 
     LaunchedEffect(state.error, state.success) {
@@ -75,13 +77,16 @@ fun SignUpPage(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
-            // 1. Logo (black picsvg) — delay 0ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 0) {
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // 1. Logo — delay 0ms
+            SlideAnimationTransition(visible = visible, delayMillis = 0) {
                 Image(
                     painter = painterResource(id = R.drawable.picsvg_black),
                     contentDescription = "App Logo",
@@ -91,8 +96,8 @@ fun SignUpPage(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 2. "Dompet Ibu" title — delay 100ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 100) {
+            // 2. "Dompet Ibu" — delay 80ms
+            SlideAnimationTransition(visible = visible, delayMillis = 80) {
                 Text(
                     text = "Dompet Ibu",
                     fontSize = 26.sp,
@@ -101,14 +106,14 @@ fun SignUpPage(
                 )
             }
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             if (state.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.padding(bottom = 16.dp))
             }
 
-            // 3. Email field — delay 200ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 200) {
+            // 3. Email field — delay 160ms
+            SlideAnimationTransition(visible = visible, delayMillis = 160) {
                 CustomOutlineTextField(
                     value = state.email,
                     onValueChange = { viewModel.onEmailChange(it) },
@@ -124,8 +129,8 @@ fun SignUpPage(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 4. Password field — delay 320ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 320) {
+            // 4. Password field — delay 240ms
+            SlideAnimationTransition(visible = visible, delayMillis = 240) {
                 CustomOutlineTextField(
                     value = state.password,
                     onValueChange = { viewModel.onPasswordChange(it) },
@@ -142,8 +147,8 @@ fun SignUpPage(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 5. Confirm password field — delay 440ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 440) {
+            // 5. Confirm password — delay 320ms
+            SlideAnimationTransition(visible = visible, delayMillis = 320) {
                 CustomOutlineTextField(
                     value = state.repassword,
                     onValueChange = { viewModel.onRepasswordChange(it) },
@@ -165,8 +170,8 @@ fun SignUpPage(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 6. Sign Up button — delay 560ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 560) {
+            // 6. Sign Up button — delay 400ms
+            SlideAnimationTransition(visible = visible, delayMillis = 400) {
                 Button(
                     onClick = { viewModel.signUp() },
                     modifier = Modifier.fillMaxWidth(),
@@ -178,14 +183,16 @@ fun SignUpPage(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // 7. Login link — delay 680ms
-            SlideAnimationTransition(visible = startAnimation, delayMillis = 680) {
+            // 7. Login link — delay 480ms
+            SlideAnimationTransition(visible = visible, delayMillis = 480) {
                 Text(
                     text = "Sudah punya akun? Login",
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable { onLoginClick() }
                 )
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
