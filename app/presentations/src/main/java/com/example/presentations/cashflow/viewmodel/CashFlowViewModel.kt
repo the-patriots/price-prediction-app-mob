@@ -166,7 +166,8 @@ class CashFlowViewModel(
                         isCheckingAi = false,
                         isLoading = false,
                         showAiDialog = true,
-                        aiResultText = prediction
+                        aiEnumText = prediction.marketPrice,
+                        aiResultText = "Harga berada di status ${prediction.prediction} dari market price, harga market ada pada ${prediction.marketPrice}"
                     )
                 }
             }.onFailure { err ->
@@ -192,7 +193,7 @@ class CashFlowViewModel(
                 success = null,
                 showAiDialog = false,
                 payload = it.payload.copy(
-                    cashFlow = it.payload.cashFlow.copy(result = it.aiResultText)
+                    cashFlow = it.payload.cashFlow.copy(result = it.aiEnumText)
                 )
             )
         }

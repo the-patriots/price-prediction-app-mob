@@ -29,6 +29,7 @@ data class CashFlowState(
     val isCheckingAi: Boolean = false,
     val showAiDialog: Boolean = false,
     val aiResultText: String = "",
+    val aiEnumText:String = "",
     val error: String? = null,
     val success: String? = null,
     val isFormValid: Boolean = false,
