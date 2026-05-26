@@ -3,6 +3,7 @@ package com.example.data.cashflow.repository
 import com.example.core.constans.enums.InputTransactionEnum
 import com.example.data.cashflow.datasource.CashFlowNetworkDatasource
 import com.example.data.cashflow.model.CashFlowPayloadModel
+import com.example.domain.cashflow.entities.AiCheck
 import com.example.domain.cashflow.entities.CashFlowEntity
 import com.example.domain.cashflow.entities.CashFlowPayload
 import com.example.domain.cashflow.repository.CashFlowRepository
@@ -20,8 +21,8 @@ class CashFlowRepositoryImpl(
         return cashFlowNetworkDatasource.deleteCashFlow(id)
     }
 
-    override suspend fun checkAiPrice(category: String, productName: String, price: Double): Result<String> {
-        return cashFlowNetworkDatasource.checkAiPrice(category, productName, price)
+    override suspend fun checkAiPrice(category: String, productName: String, price: Double): Result<AiCheck> {
+        return cashFlowNetworkDatasource.checkAiPrice(category, productName, price).map { it.toDomain() }
     }
 
     override suspend fun getCashflows(
