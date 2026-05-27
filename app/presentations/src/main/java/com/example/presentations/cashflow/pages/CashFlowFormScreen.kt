@@ -52,16 +52,16 @@ fun InputTransactionScreen(
     if (state.showAiDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.cancelSave() },
-            title = { Text(text = "AI Price Check Result") },
+            title = { Text(text = "Analisis Harga") },
             text = { Text(text = state.aiResultText) },
             confirmButton = {
                 TextButton(onClick = { viewModel.confirmSave() }) {
-                    Text("Save")
+                    Text("Simpan")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.cancelSave() }) {
-                    Text("Cancel")
+                    Text("Batal")
                 }
             }
         )
@@ -111,7 +111,7 @@ fun InputTransactionScreen(
                         CustomOutlineTextField(
                             value = state.amountString,
                             onValueChange = { viewModel.updateAmount(it) },
-                            label = "Amount",
+                            label = "Harga",
                             leadingIcon = {
                                 Text(
                                     "Rp",
@@ -140,7 +140,7 @@ fun InputTransactionScreen(
                             maxLines = 4,
                             value = state.payload.cashFlow.description ?: "",
                             onValueChange = { viewModel.updateDescription(it) },
-                            label = "Description",
+                            label = "Barang",
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.Info,
@@ -173,7 +173,7 @@ fun InputTransactionScreen(
                                     color = MaterialTheme.colorScheme.onPrimary
                                 )
                             } else {
-                                Text("Save Transaction")
+                                Text("Simpan Transaksi")
                             }
                         }
                     }

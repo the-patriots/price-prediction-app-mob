@@ -13,13 +13,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 class CashFlowViewModel(
     private val createCashFlowUseCase: CreateCashFlowUseCase,
     private val checkAiPriceUseCase: CheckAiPriceUseCase,
     private val getCashFlowsUseCase: GetCashFlowsUseCase,
     private val deleteCashFlowUseCase: DeleteCashFlowUseCase,
-): ViewModel() {
+) : ViewModel() {
     private val _state = MutableStateFlow(CashFlowState())
     val state = _state.asStateFlow()
 
@@ -45,7 +47,8 @@ class CashFlowViewModel(
 
     fun loadCashFlows() {
         _state.update { it.copy(isLoading = true) }
-        val type = if (state.value.currentTab == 0 ) InputTransactionEnum.TypeCashFlow.PENGELUARAN else InputTransactionEnum.TypeCashFlow.PEMASUKKAN
+        val type =
+            if (state.value.currentTab == 0) InputTransactionEnum.TypeCashFlow.PENGELUARAN else InputTransactionEnum.TypeCashFlow.PEMASUKKAN
         val month = _selectedMonth ?: ""
         viewModelScope.launch {
             getCashFlowsUseCase(
@@ -53,8 +56,22 @@ class CashFlowViewModel(
                 month = month,
                 year = _selectedYear,
             ).fold(
-                onSuccess = { data -> _state.update { it.copy(cashFlows = data, isLoading = false) }},
-                onFailure = {err -> _state.update { it.copy(error = err.message, isLoading = false) }}
+                onSuccess = { data ->
+                    _state.update {
+                        it.copy(
+                            cashFlows = data,
+                            isLoading = false
+                        )
+                    }
+                },
+                onFailure = { err ->
+                    _state.update {
+                        it.copy(
+                            error = err.message,
+                            isLoading = false
+                        )
+                    }
+                }
             )
         }
     }
@@ -66,7 +83,7 @@ class CashFlowViewModel(
             InputTransactionEnum.KategoriPemasukan.entries.first().item
         }
         val selectedTab = InputTransactionEnum.TypeCashFlow.entries[index]
-        _state.update { 
+        _state.update {
             it.copy(
                 payload = it.payload.copy(
                     cashFlow = it.payload.cashFlow.copy(
@@ -75,7 +92,7 @@ class CashFlowViewModel(
                     )
                 ),
                 selectedCategory = defaultCategory
-            ) 
+            )
         }
     }
 
@@ -92,20 +109,20 @@ class CashFlowViewModel(
     }
 
     fun updateCategory(category: DropDownItem<String>) {
-        _state.update { 
+        _state.update {
             it.copy(
                 selectedCategory = category,
                 payload = it.payload.copy(
                     cashFlow = it.payload.cashFlow.copy(category = category.label)
                 )
-            ) 
+            )
         }
     }
 
     fun updateDate(date: String) {
         val month = date.split(" ").firstOrNull() ?: ""
         val year = date.split(" ").lastOrNull()?.toIntOrNull() ?: 2026
-        _state.update { 
+        _state.update {
             it.copy(
                 dateString = date,
                 payload = it.payload.copy(
@@ -114,17 +131,17 @@ class CashFlowViewModel(
                         year = year
                     )
                 )
-            ) 
+            )
         }
     }
 
     fun updateDescription(description: String) {
-        _state.update { 
+        _state.update {
             it.copy(
                 payload = it.payload.copy(
                     cashFlow = it.payload.cashFlow.copy(description = description)
                 )
-            ) 
+            )
         }
     }
 
@@ -147,27 +164,36 @@ class CashFlowViewModel(
             return
         }
 
-        _state.update { it.copy(isCheckingAi = true, isLoading = true, error = null, success = null) }
+        _state.update {
+            it.copy(
+                isCheckingAi = true,
+                isLoading = true,
+                error = null,
+                success = null
+            )
+        }
 
         viewModelScope.launch {
             val category = currentState.payload.cashFlow.category
             val description = currentState.payload.cashFlow.description ?: ""
             val amount = currentState.payload.cashFlow.amount
-            
+
             val result = checkAiPriceUseCase(
                 category = category,
                 productName = description,
                 price = amount
             )
-            
+
             result.onSuccess { prediction ->
+                val formattedPrice = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                    .format(prediction.marketPrice.toInt())
                 _state.update {
                     it.copy(
                         isCheckingAi = false,
                         isLoading = false,
                         showAiDialog = true,
                         aiEnumText = prediction.marketPrice,
-                        aiResultText = "Harga berada di status ${prediction.prediction} dari market price, harga market ada pada ${prediction.marketPrice}"
+                        aiResultText = "Harga berada di status ${prediction.prediction} dari market price, harga market ada pada $formattedPrice"
                     )
                 }
             }.onFailure { err ->
@@ -201,7 +227,7 @@ class CashFlowViewModel(
         viewModelScope.launch {
             val result = createCashFlowUseCase(_state.value.payload)
             result.onSuccess { msg ->
-                _state.update { 
+                _state.update {
                     it.copy(
                         isLoading = false,
                         success = msg,
@@ -221,7 +247,7 @@ class CashFlowViewModel(
                     )
                 }
             }.onFailure { err ->
-                _state.update { 
+                _state.update {
                     it.copy(
                         isLoading = false,
                         error = err.message ?: "Unknown error occurred"
