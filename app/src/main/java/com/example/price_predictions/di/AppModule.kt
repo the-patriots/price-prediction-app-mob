@@ -42,11 +42,14 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.price_predictions.BuildConfig
 import com.example.price_predictions.navigation.mainnav.MainNavViewModel
+import io.github.jan.supabase.annotations.SupabaseInternal
+import io.ktor.client.plugins.HttpTimeout
 import org.koin.core.module.dsl.singleOf
 
 import org.koin.dsl.module
 
 
+@OptIn(SupabaseInternal::class)
 fun appModule() = module {
     single {
         Room.databaseBuilder(
@@ -63,7 +66,15 @@ fun appModule() = module {
             install(Auth)
             install(Postgrest)
             install(Functions)
+            httpConfig {
+                install(HttpTimeout) {
+                    requestTimeoutMillis = 60_000L // Maksimal waktu tunggu seluruh request (60 detik)
+                    connectTimeoutMillis = 60_000L // Maksimal waktu tunggu untuk terhubung ke server
+                    socketTimeoutMillis = 60_000L  // Maksimal waktu jeda antar paket data yang diterima
+                }
+            }
         }
+
     }
 
     //home
