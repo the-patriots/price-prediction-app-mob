@@ -224,7 +224,7 @@ fun MainScaffold(
             ) { route ->
                 when (route) {
                     MainRoute.HomePage -> HomeScreen(selectedMonth = selectedMonth)
-                    MainRoute.Transactions -> CashFlowScreen(selectedMonth = selectedMonth)
+                    MainRoute.Transactions -> CashFlowScreen(selectedMonth = selectedMonth, onHistoryDelete = homeViewModel::loadData)
                     MainRoute.InputPage -> InputTransactionScreen()
                     MainRoute.AnalyticPage -> AnalyticScreen(selectedMonth = selectedMonth)
                     else -> HomeScreen(selectedMonth = selectedMonth)

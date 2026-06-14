@@ -52,7 +52,8 @@ import org.koin.androidx.compose.koinViewModel
 fun CashFlowScreen(
     modifier: Modifier = Modifier,
     selectedMonth: String? = null,
-    viewModel: CashFlowViewModel = koinViewModel()
+    viewModel: CashFlowViewModel = koinViewModel(),
+    onHistoryDelete: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -116,6 +117,7 @@ fun CashFlowScreen(
                     confirmValueChange = { value ->
                         if (value == SwipeToDismissBoxValue.EndToStart) {
                             viewModel.deleteCashFlow(cashflow.id)
+                            onHistoryDelete()
                             true
                         } else {
                             false
