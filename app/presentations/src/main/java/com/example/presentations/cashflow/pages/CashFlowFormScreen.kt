@@ -125,7 +125,7 @@ fun InputTransactionScreen(
                         CustomOutlineTextField(
                             value = state.amountString,
                             onValueChange = { viewModel.updateAmount(it) },
-                            label = "Harga",
+                            label = "Jumlah",
                             leadingIcon = {
                                 Text(
                                     "Rp",
