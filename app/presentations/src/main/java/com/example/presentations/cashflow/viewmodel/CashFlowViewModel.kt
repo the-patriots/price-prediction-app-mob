@@ -151,7 +151,7 @@ class CashFlowViewModel(
         _state.update { it.copy(success = null, error = null) }
     }
 
-    fun submit() {
+    fun submit(id: String? = null) {
         val currentState = _state.value
 
         if (currentState.amountString.isBlank() || currentState.amountString.toDoubleOrNull() == null) {
@@ -166,7 +166,7 @@ class CashFlowViewModel(
 
         // If pemasukan (income), bypass AI check and save directly
         if (currentState.currentTab == 1) {
-            directSave()
+            directSave(id)
             return
         }
 

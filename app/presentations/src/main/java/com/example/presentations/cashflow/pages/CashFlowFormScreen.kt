@@ -53,7 +53,6 @@ fun InputTransactionScreen(
         state.success?.let {
             snackbarHostState.showSnackbar(message = it)
             viewModel.resetSnackbar()
-            onSubmit()
         }
     }
 
@@ -65,6 +64,7 @@ fun InputTransactionScreen(
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.confirmSave(id)
+                    onSubmit()
                 }) {
                     Text("Simpan")
                 }
@@ -170,7 +170,8 @@ fun InputTransactionScreen(
                     SlideAnimationTransition(visible = true, delayMillis = 500) {
                         Button(
                             onClick = {
-                                viewModel.submit()
+                                viewModel.submit(id)
+                                onSubmit()
                             },
                             colors = ButtonColors(
                                 containerColor = PrimaryBlue,
