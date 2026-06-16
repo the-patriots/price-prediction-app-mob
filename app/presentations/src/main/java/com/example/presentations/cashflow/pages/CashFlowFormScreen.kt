@@ -30,22 +30,30 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun InputTransactionScreen(
     modifier: Modifier = Modifier,
-    viewModel: CashFlowViewModel = koinViewModel()
+    viewModel: CashFlowViewModel = koinViewModel(),
+    id: String? = null,
+    onSubmit: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
     val snackbarHostState = LocalSnackbarHostState.current
     val stateScroll = rememberScrollState()
+    val isEditForm = remember { !id.isNullOrBlank() }
+
 
     LaunchedEffect(state.error) {
         state.error?.let {
             snackbarHostState.showSnackbar(message = it)
+            viewModel.resetSnackbar()
+
         }
     }
 
     LaunchedEffect(state.success) {
         state.success?.let {
             snackbarHostState.showSnackbar(message = it)
+            viewModel.resetSnackbar()
+            onSubmit()
         }
     }
 
@@ -55,7 +63,9 @@ fun InputTransactionScreen(
             title = { Text(text = "Analisis Harga") },
             text = { Text(text = state.aiResultText) },
             confirmButton = {
-                TextButton(onClick = { viewModel.confirmSave() }) {
+                TextButton(onClick = {
+                    viewModel.confirmSave(id)
+                }) {
                     Text("Simpan")
                 }
             },
@@ -67,10 +77,12 @@ fun InputTransactionScreen(
         )
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
-        TabRow(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+       if (!isEditForm) TabRow(
             selectedTabIndex = state.currentTab,
             contentColor = PrimaryBlue,
             indicator = { tabPositions ->
@@ -88,10 +100,12 @@ fun InputTransactionScreen(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column (modifier = Modifier.fillMaxSize().verticalScroll(stateScroll)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(stateScroll)) {
             key(state.currentTab) {
                 Column {
                     SlideAnimationTransition(visible = true, delayMillis = 0) {
@@ -173,7 +187,7 @@ fun InputTransactionScreen(
                                     color = MaterialTheme.colorScheme.onPrimary
                                 )
                             } else {
-                                Text("Simpan Transaksi")
+                                Text(text = if (isEditForm) "Edit Transaksi" else "Simpan Transaksi")
                             }
                         }
                     }

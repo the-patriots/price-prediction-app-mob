@@ -23,6 +23,7 @@ import com.example.data.home.datasource.HomeNetworkDatasourceImpl
 import com.example.data.home.repository.HomeRepositoryImpl
 import com.example.domain.analytic.repository.AnalyticRepository
 import com.example.domain.analytic.usecases.GetAnalyticDataUseCase
+import com.example.domain.cashflow.usecases.EditCashflowUseCase
 import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
 import com.example.domain.home.repository.HomeRepository
 import com.example.domain.home.usecases.GetHomeSummaryUseCase
@@ -108,8 +109,9 @@ fun appModule() = module {
     factory { CreateCashFlowUseCase(get()) }
     factory { CheckAiPriceUseCase(get()) }
     factory { GetCashFlowsUseCase(get()) }
+    factory { EditCashflowUseCase(get()) }
     factory { DeleteCashFlowUseCase(get()) }
-    viewModel { CashFlowViewModel(get(), get(), get(), get()) }
+    viewModel { CashFlowViewModel(get(), get(), get(), get(), get()) }
 
     //analytic
     single<AnalyticNetworkDatasource> { AnalyticNetworkDatasourceImpl(get()) }

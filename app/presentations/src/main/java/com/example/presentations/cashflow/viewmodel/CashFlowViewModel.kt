@@ -7,6 +7,7 @@ import com.example.core.constans.enums.InputTransactionEnum
 import com.example.domain.cashflow.usecases.CheckAiPriceUseCase
 import com.example.domain.cashflow.usecases.CreateCashFlowUseCase
 import com.example.domain.cashflow.usecases.DeleteCashFlowUseCase
+import com.example.domain.cashflow.usecases.EditCashflowUseCase
 import com.example.domain.cashflow.usecases.GetCashFlowsUseCase
 import com.example.presentations.cashflow.state.CashFlowState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ class CashFlowViewModel(
     private val createCashFlowUseCase: CreateCashFlowUseCase,
     private val checkAiPriceUseCase: CheckAiPriceUseCase,
     private val getCashFlowsUseCase: GetCashFlowsUseCase,
+    private val editCashflowUseCase: EditCashflowUseCase,
     private val deleteCashFlowUseCase: DeleteCashFlowUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CashFlowState())
@@ -145,6 +147,10 @@ class CashFlowViewModel(
         }
     }
 
+    fun resetSnackbar() {
+        _state.update { it.copy(success = null, error = null) }
+    }
+
     fun submit() {
         val currentState = _state.value
 
@@ -185,15 +191,20 @@ class CashFlowViewModel(
             )
 
             result.onSuccess { prediction ->
-                val formattedPrice = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-                    .format(prediction.marketPrice.toInt())
+                val formattedPrice = try {
+                    NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                        .format(prediction.marketPrice.toInt())
+                } catch (_: Exception) {
+                    NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                        .format(0)
+                }
                 _state.update {
                     it.copy(
                         isCheckingAi = false,
                         isLoading = false,
                         showAiDialog = true,
                         aiEnumText = prediction.marketPrice,
-                        aiResultText = "Harga berada di status ${prediction.prediction} dari market price, harga market ada pada $formattedPrice"
+                        aiResultText = "Harga berada di status ${prediction.prediction} dari harga pasar, harga pasar ada pada $formattedPrice"
                     )
                 }
             }.onFailure { err ->
@@ -208,7 +219,7 @@ class CashFlowViewModel(
         }
     }
 
-    fun confirmSave() {
+    fun confirmSave(id: String? = null) {
         val currentState = _state.value
 
         // Set the prediction result into the cashflow payload before saving
@@ -225,6 +236,40 @@ class CashFlowViewModel(
         }
 
         viewModelScope.launch {
+            if (!id.isNullOrBlank()) {
+                val result = editCashflowUseCase(id, _state.value.payload)
+                result.onSuccess { msg ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            success = msg,
+                            error = null,
+                            amountString = "",
+                            dateString = "",
+                            aiResultText = "",
+                            payload = it.payload.copy(
+                                cashFlow = it.payload.cashFlow.copy(
+                                    amount = 0.0,
+                                    description = "",
+                                    month = "",
+                                    year = 2026,
+                                    result = null
+                                )
+                            )
+                        )
+                    }
+                }.onFailure { err ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = err.message ?: "Unknown error occurred"
+                        )
+                    }
+                }
+                return@launch
+            }
+
+
             val result = createCashFlowUseCase(_state.value.payload)
             result.onSuccess { msg ->
                 _state.update {
@@ -257,10 +302,44 @@ class CashFlowViewModel(
         }
     }
 
-    private fun directSave() {
+    private fun directSave(id: String? = null) {
         _state.update { it.copy(isLoading = true, error = null, success = null) }
 
+
+
         viewModelScope.launch {
+            if (!id.isNullOrBlank()) {
+                val result = editCashflowUseCase(id, _state.value.payload)
+                result.onSuccess { msg ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            success = msg,
+                            error = null,
+                            amountString = "",
+                            dateString = "",
+                            aiResultText = "",
+                            payload = it.payload.copy(
+                                cashFlow = it.payload.cashFlow.copy(
+                                    amount = 0.0,
+                                    description = "",
+                                    month = "",
+                                    year = 2026,
+                                    result = null
+                                )
+                            )
+                        )
+                    }
+                }.onFailure { err ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = err.message ?: "Unknown error occurred"
+                        )
+                    }
+                }
+                return@launch
+            }
             val result = createCashFlowUseCase(_state.value.payload)
             result.onSuccess { msg ->
                 _state.update {

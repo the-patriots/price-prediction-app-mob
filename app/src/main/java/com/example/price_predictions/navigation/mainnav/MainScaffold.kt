@@ -114,7 +114,7 @@ fun MainScaffold(
         ),
         BottomNavItem(
             label = "Input",
-            route = MainRoute.InputPage,
+            route = MainRoute.InputPage(),
             selectedIcon = Icons.Rounded.Add,
             unselectedIcon = Icons.Outlined.Add
         ),
@@ -134,6 +134,14 @@ fun MainScaffold(
     val currentTabIndex = navItems.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
 
     val selectedMonth by viewModel.selectedMonth
+
+    val onNavigateTo: (String, Any?) -> Unit =  { action, param ->
+        previousTabIndex = currentTabIndex
+        when(action) {
+            "edit" -> viewModel.navigateTo(MainRoute.InputPage(id = param.toString()))
+        }
+
+    }
 
     CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
         Scaffold(
@@ -223,10 +231,10 @@ fun MainScaffold(
                 modifier = Modifier.padding(paddingValues)
             ) { route ->
                 when (route) {
-                    MainRoute.HomePage -> HomeScreen(selectedMonth = selectedMonth)
-                    MainRoute.Transactions -> CashFlowScreen(selectedMonth = selectedMonth, onHistoryDelete = homeViewModel::loadData)
-                    MainRoute.InputPage -> InputTransactionScreen()
-                    MainRoute.AnalyticPage -> AnalyticScreen(selectedMonth = selectedMonth)
+                    is MainRoute.HomePage -> HomeScreen(selectedMonth = selectedMonth)
+                    is MainRoute.Transactions -> CashFlowScreen(selectedMonth = selectedMonth, onHistoryDelete = homeViewModel::loadData, onNavigateTo = onNavigateTo)
+                    is MainRoute.InputPage -> InputTransactionScreen(onSubmit = homeViewModel::loadData, id=route.id)
+                    is MainRoute.AnalyticPage -> AnalyticScreen(selectedMonth = selectedMonth)
                     else -> HomeScreen(selectedMonth = selectedMonth)
                 }
             }

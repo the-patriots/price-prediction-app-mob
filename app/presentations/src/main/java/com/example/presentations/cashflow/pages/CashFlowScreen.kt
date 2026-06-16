@@ -1,13 +1,14 @@
 package com.example.presentations.cashflow.pages
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,15 +33,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.core.constans.enums.InputTransactionEnum
 import com.example.core.components.CardBudget
 import com.example.core.components.YearSelector
 import com.example.core.components.animations.SlideAnimationTransition
+import com.example.core.constans.enums.InputTransactionEnum
 import com.example.core.ui.theme.Danger
 import com.example.core.ui.theme.PrimaryBlue
 import com.example.core.ui.theme.Success
@@ -54,8 +56,10 @@ fun CashFlowScreen(
     selectedMonth: String? = null,
     viewModel: CashFlowViewModel = koinViewModel(),
     onHistoryDelete: () -> Unit = {},
+    onNavigateTo:((String, Any?) -> Unit)? = null
 ) {
     val state by viewModel.state.collectAsState()
+    val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(selectedMonth) {
         viewModel.updateMonth(selectedMonth)
@@ -141,7 +145,13 @@ fun CashFlowScreen(
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(color)
-                                .padding(horizontal = 20.dp),
+                                .padding(horizontal = 20.dp)
+                                .combinedClickable(
+                                    onLongClick = {},
+                                    interactionSource = interactionSource,
+                                    indication = LocalIndication.current,
+                                    onClick = {},
+                                ),
                             contentAlignment = Alignment.CenterEnd
                         ) {
                             Icon(
@@ -160,6 +170,12 @@ fun CashFlowScreen(
                             info = cashflow.description,
                             amount = cashflow.amount,
                             result = cashflow.result,
+                            withOption = true,
+                            onEdit = {onNavigateTo?.invoke("edit", cashflow.id) },
+                            onDelete = {
+                                viewModel.deleteCashFlow(cashflow.id)
+                                onHistoryDelete()
+                            }
                         )
                     }
                 }

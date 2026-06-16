@@ -11,10 +11,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ShoppingCart
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.ui.theme.Black
+import com.example.core.ui.theme.Danger
 import com.example.core.ui.theme.PrimaryBlue
 import java.text.NumberFormat
 import java.util.Locale
@@ -34,8 +43,11 @@ fun CardBudget(
     icon: ImageVector = Icons.Rounded.ShoppingCart,
     info: String? = "",
     amount: Double = 0.0,
+    withOption: Boolean = false,
     tint: Color = PrimaryBlue,
     result: String? = null,
+    onDelete: () -> Unit = {},
+    onEdit: () -> Unit = {},
 ) {
     val formattedCurrency = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(amount)
     val description = if (info.isNullOrEmpty()) "Tidak ada deskripsi" else info
@@ -47,12 +59,32 @@ fun CardBudget(
         else -> null
     }
 
-    Box(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                Icon(icon, "budget", tint = tint, modifier = Modifier.size(40.dp).padding(end = 10.dp))
+                Icon(
+                    icon,
+                    "budget",
+                    tint = tint,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(end = 10.dp)
+                )
                 Column {
-                    Text(text = category, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Black)
+                    Text(
+                        text = category,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Black
+                    )
                     Text(text = description, fontSize = 12.sp, color = Color.Gray)
                     if (result != null && resultColor != null) {
                         Box(
@@ -70,9 +102,46 @@ fun CardBudget(
                             )
                         }
                     }
+                    Text(text = formattedCurrency, fontWeight = FontWeight.Medium, color = tint)
                 }
             }
-            Text(text = formattedCurrency, fontWeight = FontWeight.Medium, color = tint)
+            if (withOption) MinimalDropdownMenu(onDelete, onEdit)
+        }
+    }
+}
+
+@Composable
+fun MinimalDropdownMenu(
+    onDelete: () -> Unit = {},
+    onEdit: () -> Unit = {},
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Edit") },
+                onClick = {
+                    onEdit()
+                    expanded = false
+
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(text = "Hapus", color = Danger) },
+                onClick = {
+                    onDelete()
+                    expanded = false
+                }
+            )
         }
     }
 }

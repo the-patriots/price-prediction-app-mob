@@ -17,6 +17,15 @@ class CashFlowRepositoryImpl(
         return response.map { it.message ?: "Success" }
     }
 
+    override suspend fun editCashFlow(
+        id: String,
+        payload: CashFlowPayload
+    ): Result<String> {
+        val dataModel = CashFlowPayloadModel.fromDomain(payload)
+        val response = cashFlowNetworkDatasource.editCashFlow(id,dataModel)
+        return response.map { it.message ?: "Success" }
+    }
+
     override suspend fun deleteCashFlow(id: String): Result<Unit> {
         return cashFlowNetworkDatasource.deleteCashFlow(id)
     }

@@ -18,8 +18,14 @@ import io.ktor.client.request.header
 
 interface CashFlowNetworkDatasource {
     suspend fun createCashFlow(payload: CashFlowPayloadModel): Result<CashFlowResponse>
+
+    suspend fun editCashFlow(id: String, payload: CashFlowPayloadModel): Result<CashFlowResponse>
     suspend fun deleteCashFlow(id: String): Result<Unit>
-    suspend fun checkAiPrice(category: String, productName: String, price: Double): Result<PredictPriceResponse>
+    suspend fun checkAiPrice(
+        category: String,
+        productName: String,
+        price: Double
+    ): Result<PredictPriceResponse>
 
     suspend fun getCashflows(
         type: InputTransactionEnum.TypeCashFlow,
@@ -46,6 +52,32 @@ class CashFLowNetworkDatasourceImpl(
         }
     }
 
+    override suspend fun editCashFlow(
+        id: String,
+        payload: CashFlowPayloadModel
+    ): Result<CashFlowResponse> {
+        return try {
+
+            _supabaseClient.from("cash_flows").update({
+                set("category", payload.category)
+                set("amount", payload.amount)
+                set("month", payload.month)
+                set("year", payload.year)
+                set("result", payload.result)
+                set("description", payload.description)
+            }) {
+                filter {
+                    eq("id", id)
+                }
+                select()
+            }
+
+            Result.success(CashFlowResponse(message = "Success", error = null))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun deleteCashFlow(id: String): Result<Unit> {
         return try {
             _supabaseClient.from("cash_flows").delete {
@@ -53,6 +85,8 @@ class CashFLowNetworkDatasourceImpl(
                     eq("id", id)
                 }
             }
+
+            _supabaseClient.from("users")
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

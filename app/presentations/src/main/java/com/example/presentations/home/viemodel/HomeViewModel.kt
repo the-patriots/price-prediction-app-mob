@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getHomeSummaryUseCase: GetHomeSummaryUseCase,
-    private val getRecentCashFlowsUseCase: GetRecentCashFlowsUseCase
+    private val getRecentCashFlowsUseCase: GetRecentCashFlowsUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeScreenState())
     val uiState = _uiState.asStateFlow()
